@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烈马电竞经营管理系统 · 连锁版（门店管理修复）</title>
+    <style>
+        /* ========== 完整样式 ========== */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+        body { background-color: #f5f7fa; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 1600px; margin: 0 auto; background-color: white; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); padding: 25px; overflow: hidden; }
+        header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eaeaea; }
+        h1 { color: #2c3e50; font-size: 2.4rem; margin-bottom: 10px; }
+        .subtitle { color: #7f8c8d; font-size: 1.1rem; }
+        .control-panel { background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+        button { background-color: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+        button:hover { background-color: #2980b9; transform: translateY(-2px); }
+        button.secondary { background-color: #95a5a6; }
+        button.secondary:hover { background-color: #7f8c8d; }
+        button.success { background-color: #27ae60; }
+        button.success:hover { background-color: #219653; }
+        button.warning { background-color: #f39c12; }
+        button.warning:hover { background-color: #e67e22; }
+        button.danger { background-color: #e74c3c; }
+        button.danger:hover { background-color: #c0392b; }
+        .tabs { display: flex; border-bottom: 1px solid #ddd; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab { padding: 14px 28px; cursor: pointer; border: none; background: none; color: #7f8c8d; font-size: 1rem; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab.active { color: #3498db; border-bottom: 3px solid #3498db; font-weight: 600; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        thead { background-color: #2c3e50; color: white; }
+        th { padding: 16px 12px; text-align: left; font-weight: 600; border-right: 1px solid rgba(255,255,255,0.1); }
+        th:last-child { border-right: none; }
+        tbody tr { border-bottom: 1px solid #eaeaea; transition: background-color 0.2s; }
+        tbody tr:hover { background-color: #f8f9fa; }
+        td { padding: 14px 12px; border-right: 1px solid #eaeaea; }
+        td:last-child { border-right: none; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 0 3px rgba(52,152,219,0.2); }
+        .summary-box { background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .metric { background-color: white; border-radius: 6px; padding: 18px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+        .metric h3 { color: #7f8c8d; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric .value { font-size: 1.8rem; font-weight: 700; color: #2c3e50; }
+        .metric .value.positive { color: #27ae60; }
+        .metric .value.negative { color: #e74c3c; }
+        .alert { padding: 15px; border-radius: 6px; margin: 15px 0; display: flex; align-items: center; gap: 12px; }
+        .alert.info { background-color: #e8f4fd; color: #2c3e50; border-left: 4px solid #3498db; }
+        .formula-info { font-size: 0.85rem; color: #7f8c8d; margin-top: 5px; font-style: italic; }
+        .time-selector { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+        .time-selector select { width: auto; padding: 8px 15px; }
+        footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eaeaea; color: #7f8c8d; font-size: 0.9rem; }
+        .chart-container { background-color: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 400px; position: relative; }
+        .monthly-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 20px; margin: 20px 0; }
+        .comparison-card { background-color: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .comparison-card h3 { color: #2c3e50; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .comparison-row { display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+        .comparison-row:last-child { border-bottom: none; font-weight: bold; color: #2c3e50; }
+        .profit-indicator { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+        .profit-positive { background-color: rgba(39,174,96,0.1); color: #27ae60; }
+        .profit-negative { background-color: rgba(231,76,60,0.1); color: #e74c3c; }
+        .profit-neutral { background-color: rgba(52,152,219,0.1); color: #3498db; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); z-index:1000; justify-content: center; align-items: center; }
+        .modal-content { background-color: white; border-radius: 8px; padding: 30px; width: 90%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eaeaea; }
+        .modal-title { font-size: 1.5rem; color: #2c3e50; }
+        .close-modal { background: none; border: none; font-size: 1.5rem; color: #7f8c8d; cursor: pointer; padding:0; width:30px; height:30px; display: flex; align-items: center; justify-content: center; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eaeaea; }
+        .category-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .category-action-btn { padding: 6px 12px; font-size: 0.85rem; border-radius: 4px; }
+        .full-period-summary { margin-top: 30px; padding-top: 20px; border-top: 2px solid #eaeaea; }
+        .attachment-container { position: relative; }
+        .attachment-btn { background-color: #9b59b6; padding: 8px 15px; font-size: 0.9rem; }
+        .attachment-btn:hover { background-color: #8e44ad; }
+        .attachments-count { display: inline-block; background-color: #3498db; color: white; font-size: 0.8rem; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+        .attachments-list { max-height:200px; overflow-y: auto; margin-top:10px; border:1px solid #ddd; border-radius:4px; padding:10px; }
+        .attachment-item { display: flex; justify-content: space-between; align-items: center; padding:8px; border-bottom:1px solid #eee; }
+        .attachment-item:last-child { border-bottom: none; }
+        .attachment-info { flex-grow:1; display: flex; align-items: center; gap:8px; }
+        .attachment-name { font-size:0.9rem; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .attachment-size { font-size:0.8rem; color:#7f8c8d; }
+        .attachment-actions { display: flex; gap:5px; }
+        .attachment-action-btn { padding:4px 8px; font-size:0.8rem; background-color:#95a5a6; }
+        .attachment-action-btn:hover { background-color:#7f8c8d; }
+        .custom-period-selector { display: flex; align-items: center; gap:10px; margin:15px 0; padding:15px; background-color:#f8f9fa; border-radius:6px; }
+        .custom-period-selector label { font-weight:600; color:#2c3e50; white-space:nowrap; }
+        .custom-period-selector input[type="date"] { width:auto; min-width:150px; }
+        .apply-custom-period { background-color:#9b59b6; }
+        .apply-custom-period:hover { background-color:#8e44ad; }
+        .account-settlement-card { background-color:white; border-radius:8px; padding:20px; margin:20px 0; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+        .account-settlement-card h3 { color:#2c3e50; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee; }
+        .account-balance { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:15px; margin-top:15px; }
+        .account-item { background-color:#f8f9fa; border-radius:6px; padding:15px; border-left:4px solid #3498db; }
+        .account-item.cash { border-left-color:#27ae60; }
+        .account-item.bank { border-left-color:#2980b9; }
+        .account-item .account-name { font-weight:600; color:#2c3e50; margin-bottom:8px; }
+        .account-item .balance { font-size:1.5rem; font-weight:700; }
+        .account-item .balance.positive { color:#27ae60; }
+        .account-item .balance.negative { color:#e74c3c; }
+        .date-selectors { display: flex; align-items: center; gap:10px; flex-wrap:wrap; }
+        .date-selector-group { display:flex; flex-direction:column; gap:5px; }
+        .date-selector-group label { font-size:0.85rem; color:#7f8c8d; }
+        .store-selector { display: flex; align-items: center; gap:10px; margin-left:15px; }
+        .store-selector select { width:150px; }
+        @media (max-width:768px) {
+            .control-panel { flex-direction:column; align-items:stretch; }
+            button { width:100%; justify-content:center; }
+            .time-selector { margin-left:0; justify-content:center; }
+            .store-selector { margin-left:0; justify-content:center; }
+            table { display:block; overflow-x:auto; }
+            .monthly-comparison { grid-template-columns:1fr; }
+            .modal-content { width:95%; padding:20px; }
+            .custom-period-selector { flex-wrap:wrap; }
+            .custom-period-selector input[type="date"] { width:100%; }
+            .account-balance { grid-template-columns:1fr; }
+            .date-selectors { flex-direction:column; align-items:stretch; }
+            .date-divider { display:none; }
+        }
+    </style>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <header><h1>烈马电竞经营管理系统 · 连锁版</h1><p class="subtitle">多门店独立记账 + 汇总对比，数据自动保存</p></header>
+    <div class="control-panel">
+        <button id="importExcel"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>导入Excel</button>
+        <button id="exportExcel" class="success"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>导出Excel</button>
+        <button id="addTransaction" class="secondary"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>新增流水</button>
+        <button id="calculateAll"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5.5a.5.5 0 0 0 0-1H1.5a.5.5 0 0 1-.5-.5V1.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 .5.5v5.5a.5.5 0 0 0 1 0V1a1 1 0 0 0-1-1H1z"/><path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0zm-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686z"/></svg>重新计算</button>
+        <div class="store-selector"><span>门店：</span><select id="storeSelect"><option value="">全部门店</option></select></div>
+        <div class="time-selector">
+            <span>时间：</span><select id="periodType"><option value="monthly">月度数据</option><option value="annual">年度数据</option><option value="full">全周期数据</option><option value="custom">自定义时间段</option></select>
+            <div class="date-selectors" id="dateSelectors">
+                <div class="date-selector-group"><label>年份</label><select id="yearSelect"><option value="">选择年份</option></select></div>
+                <div class="date-selector-group"><label>月份</label><select id="monthSelect"><option value="">选择月份</option><option value="01">1月</option><option value="02">2月</option><option value="03">3月</option><option value="04">4月</option><option value="05">5月</option><option value="06">6月</option><option value="07">7月</option><option value="08">8月</option><option value="09">9月</option><option value="10">10月</option><option value="11">11月</option><option value="12">12月</option></select></div>
+                <div class="date-selector-group"><label>日期</label><select id="daySelect"><option value="">选择日期</option></select></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="daily">日常记账流水</button>
+        <button class="tab" data-tab="categories">会计科目分类</button>
+        <button class="tab" data-tab="stores">门店管理</button>
+        <button class="tab" data-tab="storeCompare">门店对比</button>
+        <button class="tab" data-tab="summary">月度汇总分析</button>
+        <button class="tab" data-tab="annual">年度统计分析</button>
+        <button class="tab" data-tab="profit">利润深度分析</button>
+        <button class="tab" data-tab="assets">固定资产台账</button>
+        <button class="tab" data-tab="accounts">账户结算管理</button>
+        <button class="tab" data-tab="fullPeriod">全周期统计</button>
+    </div>
+
+    <!-- 日常记账流水 -->
+    <div id="daily" class="tab-content active">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>每日记录所有收支流水，请选择门店。数据自动保存到浏览器本地存储。</div>
+        <table id="dailyTable"><thead><tr><th style="width:90px;">日期</th><th style="width:70px;">凭证号</th><th style="width:100px;">门店</th><th style="width:100px;">一级分类</th><th style="width:120px;">一级科目</th><th style="width:120px;">二级科目</th><th style="width:100px;">明细分类</th><th style="width:100px;">收入金额</th><th style="width:100px;">支出金额</th><th style="width:100px;">支付方式</th><th style="width:150px;">备注</th><th style="width:100px;">附件</th><th style="width:70px;">操作</th></tr></thead><tbody id="dailyTableBody"></tbody></table>
+        <div class="summary-box"><div class="metric"><h3>总收入</h3><div class="value positive" id="totalIncome">0.00</div><div class="formula-info">= 所有收入金额之和</div></div><div class="metric"><h3>总支出</h3><div class="value negative" id="totalExpense">0.00</div><div class="formula-info">= 所有支出金额之和</div></div><div class="metric"><h3>结余</h3><div class="value" id="monthBalance">0.00</div><div class="formula-info">= 总收入 - 总支出</div></div><div class="metric"><h3>交易笔数</h3><div class="value" id="transactionCount">0</div><div class="formula-info">= 流水记录行数</div></div></div>
+        <div class="account-settlement-card"><h3>账户结算汇总</h3><div class="account-balance" id="monthlyAccountBalance"></div></div>
+    </div>
+
+    <!-- 会计科目分类 -->
+    <div id="categories" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>此表为系统核算基础，记账时请使用标准科目。目前无预设科目，请自行添加。</div>
+        <div style="margin-bottom:20px;"><button id="addCategory" class="warning"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>新增会计科目</button></div>
+        <table id="categoriesTable"><thead><tr><th>一级分类</th><th>一级科目</th><th>二级科目</th><th>明细分类</th><th>说明</th><th style="width:150px;">操作</th></tr></thead><tbody id="categoriesTableBody"></tbody></table>
+    </div>
+
+    <!-- 门店管理 -->
+    <div id="stores" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>管理所有门店信息。删除门店前请确保没有交易记录关联，否则会报错。</div>
+        <div style="margin-bottom:20px;"><button id="addStore" class="warning"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>新增门店</button></div>
+        <table id="storesTable"><thead><tr><th>门店名称</th><th>地址</th><th>联系电话</th><th>备注</th><th style="width:150px;">操作</th></tr></thead><tbody id="storesTableBody"></tbody></table>
+    </div>
+
+    <!-- 门店对比 -->
+    <div id="storeCompare" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>各门店经营数据对比（基于当前时间筛选）。支持按门店汇总收入、支出、利润等。</div>
+        <div class="summary-box"><div class="metric"><h3>总门店数</h3><div class="value" id="totalStores">0</div></div><div class="metric"><h3>总收入</h3><div class="value positive" id="compareTotalIncome">0.00</div></div><div class="metric"><h3>总支出</h3><div class="value negative" id="compareTotalExpense">0.00</div></div><div class="metric"><h3>总利润</h3><div class="value" id="compareTotalProfit">0.00</div></div></div>
+        <table id="storeCompareTable"><thead><tr><th>门店名称</th><th>收入</th><th>支出</th><th>利润</th><th>利润率</th><th>交易笔数</th><th>占比(收入)</th></tr></thead><tbody id="storeCompareBody"></tbody></table>
+        <div class="chart-container"><canvas id="storeCompareChart"></canvas></div>
+    </div>
+
+    <!-- 月度汇总分析 -->
+    <div id="summary" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>此表根据日常记账流水自动计算生成，展示本月各项收支的汇总情况和每日收支趋势。</div>
+        <div class="summary-box"><div class="metric"><h3>总收入</h3><div class="value positive" id="monthlyTotalIncome">0.00</div><div class="formula-info">= 所有收入金额之和</div></div><div class="metric"><h3>总支出</h3><div class="value negative" id="monthlyTotalExpense">0.00</div><div class="formula-info">= 所有支出金额之和</div></div><div class="metric"><h3>结余</h3><div class="value" id="monthlyBalance">0.00</div><div class="formula-info">= 总收入 - 总支出</div></div><div class="metric"><h3>日均收入</h3><div class="value" id="dailyAvgIncome">0.00</div><div class="formula-info">= 总收入 ÷ 当月天数</div></div></div>
+        <div class="account-settlement-card"><h3>账户结算汇总</h3><div class="account-balance" id="summaryAccountBalance"></div></div>
+        <h3>每日收支趋势图</h3><div class="chart-container"><canvas id="dailyTrendChart"></canvas></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">收支汇总表</h3><table id="summaryTable"><thead><tr><th>项目</th><th>金额</th><th>累计金额(年度)</th><th>说明</th></tr></thead><tbody id="summaryTableBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">每日收支明细</h3><table id="dailyDetailTable"><thead><tr><th>日期</th><th>收入金额</th><th>支出金额</th><th>当日结余</th><th>交易笔数</th></tr></thead><tbody id="dailyDetailBody"></tbody></table>
+    </div>
+
+    <!-- 年度统计分析 -->
+    <div id="annual" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>展示年度经营数据统计，包含月度趋势分析和年度汇总。</div>
+        <div class="summary-box"><div class="metric"><h3>年度总收入</h3><div class="value positive" id="annualTotalIncome">0.00</div><div class="formula-info">= 全年所有收入之和</div></div><div class="metric"><h3>年度总支出</h3><div class="value negative" id="annualTotalExpense">0.00</div><div class="formula-info">= 全年所有支出之和</div></div><div class="metric"><h3>年度净利润</h3><div class="value" id="annualNetProfit">0.00</div><div class="formula-info">= 年度总收入 - 总支出 - 折旧</div></div><div class="metric"><h3>年度净利润率</h3><div class="value" id="annualProfitMargin">0%</div><div class="formula-info">= 年度净利润 ÷ 总收入 × 100%</div></div></div>
+        <div class="account-settlement-card"><h3>年度账户结算汇总</h3><div class="account-balance" id="annualAccountBalance"></div></div>
+        <div class="chart-container"><canvas id="annualTrendChart"></canvas></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">月度收入支出趋势</h3><table id="monthlyTrendTable"><thead><tr><th>月份</th><th>收入</th><th>支出</th><th>利润</th><th>利润率</th><th>较上月变化</th></tr></thead><tbody id="monthlyTrendBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">年度收入构成</h3><table id="annualIncomeTable"><thead><tr><th>收入类别</th><th>年度金额</th><th>占比</th><th>月均收入</th></tr></thead><tbody id="annualIncomeBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">年度支出构成</h3><table id="annualExpenseTable"><thead><tr><th>支出类别</th><th>年度金额</th><th>占比</th><th>月均支出</th></tr></thead><tbody id="annualExpenseBody"></tbody></table>
+    </div>
+
+    <!-- 利润深度分析 -->
+    <div id="profit" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>利润深度分析：展示经营利润的详细构成、趋势分析与盈利能力评估。下方可按科目层级筛选查看明细。</div>
+        <div class="summary-box"><div class="metric"><h3>毛利率</h3><div class="value" id="grossProfitMargin">0%</div><div class="formula-info">= (收入-商品成本) ÷ 收入 × 100%</div></div><div class="metric"><h3>营业利润率</h3><div class="value" id="operatingProfitMargin">0%</div><div class="formula-info">= 经营利润 ÷ 收入 × 100%</div></div><div class="metric"><h3>净利率</h3><div class="value" id="netProfitMargin">0%</div><div class="formula-info">= 净利润 ÷ 收入 × 100%</div></div><div class="metric"><h3>成本收入比</h3><div class="value" id="costIncomeRatio">0%</div><div class="formula-info">= 总成本 ÷ 总收入 × 100%</div></div></div>
+        <div class="monthly-comparison"><div class="comparison-card"><h3>利润构成分析</h3><div class="comparison-row"><span>总收入</span><span id="profitIncome">0.00</span></div><div class="comparison-row"><span>- 商品销售成本</span><span id="goodsCost">0.00</span></div><div class="comparison-row"><span>= 毛利润</span><span id="grossProfit">0.00</span></div><div class="comparison-row"><span>- 运营费用</span><span id="operatingCost">0.00</span></div><div class="comparison-row"><span>= 经营利润</span><span id="operatingProfit">0.00</span></div><div class="comparison-row"><span>- 折旧摊销</span><span id="depreciationAmortization">0.00</span></div><div class="comparison-row"><span>= 净利润</span><span id="netProfit">0.00</span></div></div><div class="comparison-card"><h3>盈利能力指标</h3><div class="comparison-row"><span>单机日均收入</span><span id="perMachineDailyIncome">0.00</span></div><div class="comparison-row"><span>坪效(元/㎡/月)</span><span id="areaEfficiency">0.00</span></div><div class="comparison-row"><span>人效(元/人/月)</span><span id="staffEfficiency">0.00</span></div><div class="comparison-row"><span>投资回报率(ROI)</span><span id="roi">0%</span></div><div class="comparison-row"><span>盈亏平衡点</span><span id="breakEvenPoint">0</span></div><div class="comparison-row"><span>安全边际率</span><span id="safetyMargin">0%</span></div></div></div>
+        <div class="chart-container"><canvas id="profitStructureChart"></canvas></div>
+        <div class="account-settlement-card" style="margin-top:20px;"><h3>📊 科目明细分析 <span style="font-size:0.9rem; color:#7f8c8d;">按一级分类/科目/明细筛选，汇总收支</span></h3><div style="display:flex; flex-wrap:wrap; gap:10px; margin:15px 0; align-items:center;"><select id="profitFilterType" style="width:160px;"><option value="">全部一级分类</option></select><select id="profitFilterPrimary" style="width:160px;"><option value="">全部一级科目</option></select><select id="profitFilterSecondary" style="width:160px;"><option value="">全部二级科目</option></select><select id="profitFilterDetail" style="width:160px;"><option value="">全部明细分类</option></select><button id="applyProfitFilter" class="secondary" style="padding:8px 16px;">应用筛选</button><button id="resetProfitFilter" class="secondary" style="padding:8px 16px;">重置</button></div><div style="overflow-x:auto;"><table id="profitDetailTable"><thead><tr><th>一级分类</th><th>一级科目</th><th>二级科目</th><th>明细分类</th><th>收入金额</th><th>支出金额</th><th>净额</th></tr></thead><tbody id="profitDetailBody"></tbody><tfoot id="profitDetailFoot" style="background:#f0f0f0; font-weight:bold;"></tfoot></table></div></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">成本控制分析</h3><table id="costControlTable"><thead><tr><th>成本类别</th><th>本月金额</th><th>占比</th><th>预算</th><th>差异</th><th>控制建议</th></tr></thead><tbody id="costControlBody"></tbody></table>
+    </div>
+
+    <!-- 固定资产台账 -->
+    <div id="assets" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>记录所有固定资产，系统自动计算折旧。新增固定资产后请填写原值和预计使用年限。</div>
+        <table id="assetsTable"><thead><tr><th>资产名称</th><th>购买日期</th><th>原值</th><th>预计使用年限(年)</th><th>月折旧额</th><th>累计折旧</th><th>净值</th><th>存放位置</th><th>操作</th></tr></thead><tbody id="assetsTableBody"></tbody></table>
+        <button id="addAsset" class="secondary"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>新增固定资产</button>
+    </div>
+
+    <!-- 账户结算管理 -->
+    <div id="accounts" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>账户结算管理：展示各个账户的收支结余情况，支持设置账户初始余额。</div>
+        <div class="summary-box"><div class="metric"><h3>现金账户余额</h3><div class="value" id="cashAccountBalance">0.00</div><div class="formula-info">= 现金收入 - 现金支出</div></div><div class="metric"><h3>建行账户余额</h3><div class="value" id="bankAccountBalance">0.00</div><div class="formula-info">= 建行收入 - 建行支出</div></div><div class="metric"><h3>账户总余额</h3><div class="value" id="totalAccountBalance">0.00</div><div class="formula-info">= 所有账户余额之和</div></div><div class="metric"><h3>账户交易笔数</h3><div class="value" id="accountTransactionCount">0</div><div class="formula-info">= 所有账户交易总笔数</div></div></div>
+        <div class="account-settlement-card"><h3>账户初始余额设置</h3><div class="form-group"><label for="cashInitialBalance">现金账户初始余额（元）</label><input type="number" step="0.01" id="cashInitialBalance" value="0" placeholder="请输入现金账户初始余额"></div><div class="form-group"><label for="bankInitialBalance">建行账户初始余额（元）</label><input type="number" step="0.01" id="bankInitialBalance" value="0" placeholder="请输入建行账户初始余额"></div><button id="saveInitialBalance" class="success"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/></svg>保存初始余额设置</button></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">账户收支明细汇总</h3><table id="accountDetailTable"><thead><tr><th>账户</th><th>期初余额</th><th>本期收入</th><th>本期支出</th><th>期末余额</th><th>交易笔数</th></tr></thead><tbody id="accountDetailBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">账户收支趋势图</h3><div class="chart-container"><canvas id="accountTrendChart"></canvas></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">账户月度对比</h3><table id="accountMonthlyTable"><thead><tr><th>月份</th><th>现金收入</th><th>现金支出</th><th>现金余额</th><th>建行收入</th><th>建行支出</th><th>建行余额</th></tr></thead><tbody id="accountMonthlyBody"></tbody></table>
+    </div>
+
+    <!-- 全周期统计 -->
+    <div id="fullPeriod" class="tab-content">
+        <div class="alert info"><svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>全周期经营数据统计：从系统有记录开始到现在的所有数据汇总分析。您也可以选择自定义时间段进行统计。</div>
+        <div class="custom-period-selector" id="customPeriodSelector" style="display:none;"><label>开始日期：</label><input type="date" id="customStartDate" value=""><label style="margin-left:10px;">结束日期：</label><input type="date" id="customEndDate" value=""><button id="applyCustomPeriod" class="apply-custom-period">应用时间段</button><button id="resetCustomPeriod" class="secondary">重置</button></div>
+        <div class="summary-box"><div class="metric"><h3>全周期总收入</h3><div class="value positive" id="fullPeriodTotalIncome">0.00</div><div class="formula-info">= 所有收入之和</div></div><div class="metric"><h3>全周期总支出</h3><div class="value negative" id="fullPeriodTotalExpense">0.00</div><div class="formula-info">= 所有支出之和</div></div><div class="metric"><h3>全周期净利润</h3><div class="value" id="fullPeriodNetProfit">0.00</div><div class="formula-info">= 总收入 - 总支出 - 折旧</div></div><div class="metric"><h3>全周期净利率</h3><div class="value" id="fullPeriodProfitMargin">0%</div><div class="formula-info">= 净利润 ÷ 总收入 × 100%</div></div><div class="metric"><h3>运营月数</h3><div class="value" id="operatingMonths">0</div><div class="formula-info">= 有记录的总月数</div></div><div class="metric"><h3>月均利润</h3><div class="value" id="monthlyAvgProfit">0.00</div><div class="formula-info">= 净利润 ÷ 运营月数</div></div></div>
+        <div class="account-settlement-card"><h3>全周期账户结算汇总</h3><div class="account-balance" id="fullPeriodAccountBalance"></div></div>
+        <div class="chart-container"><canvas id="fullPeriodTrendChart"></canvas></div>
+        <h3 style="margin-top:30px; margin-bottom:15px;">年度经营汇总</h3><table id="fullPeriodAnnualTable"><thead><tr><th>年度</th><th>收入</th><th>支出</th><th>利润</th><th>利润率</th><th>较上年变化</th></tr></thead><tbody id="fullPeriodAnnualBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">全周期收入构成</h3><table id="fullPeriodIncomeTable"><thead><tr><th>收入类别</th><th>总金额</th><th>占比</th><th>月均金额</th></tr></thead><tbody id="fullPeriodIncomeBody"></tbody></table>
+        <h3 style="margin-top:30px; margin-bottom:15px;">全周期支出构成</h3><table id="fullPeriodExpenseTable"><thead><tr><th>支出类别</th><th>总金额</th><th>占比</th><th>月均金额</th></tr></thead><tbody id="fullPeriodExpenseBody"></tbody></table>
+    </div>
+    <footer><p>烈马电竞经营管理系统 &copy; 2025 | 数据自动保存到浏览器本地存储，更换设备前请务必导出备份</p></footer>
+</div>
+
+<!-- 会计科目管理模态框 -->
+<div id="categoryModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="categoryModalTitle">新增会计科目</h2><button class="close-modal" id="closeCategoryModal">&times;</button></div><form id="categoryForm"><input type="hidden" id="categoryId"><div class="form-group"><label for="categoryType">一级分类</label><select id="categoryType" required><option value="">请选择一级分类</option><option value="资产类">资产类</option><option value="负债类">负债类</option><option value="所有者权益类">所有者权益类</option><option value="损益类">损益类</option><option value="成本类">成本类</option></select></div><div class="form-group"><label for="primaryCategory">一级科目</label><input type="text" id="primaryCategory" required placeholder="例如：主营业务收入"></div><div class="form-group"><label for="secondaryCategory">二级科目</label><input type="text" id="secondaryCategory" required placeholder="例如：网费收入"></div><div class="form-group"><label for="detailCategory">明细分类</label><input type="text" id="detailCategory" placeholder="例如：电竞A区 / 机械键盘 / 可乐"></div><div class="form-group"><label for="categoryDescription">说明</label><textarea id="categoryDescription" rows="3" placeholder="请填写科目说明"></textarea></div><div class="modal-actions"><button type="button" class="secondary" id="cancelCategory">取消</button><button type="submit" class="success" id="saveCategory">保存</button></div></form></div></div>
+
+<!-- 附件管理模态框 -->
+<div id="attachmentModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title">管理附件</h2><button class="close-modal" id="closeAttachmentModal">&times;</button></div><div class="modal-body"><div style="margin-bottom:20px;"><input type="file" id="fileInput" multiple style="display:none;"><button id="uploadAttachmentBtn" class="attachment-btn"><svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>上传附件 (最多10个)</button><div id="attachmentLimitInfo" style="font-size:0.9rem; color:#7f8c8d; margin-top:8px;">当前附件数：<span id="currentAttachmentCount">0</span>/10</div></div><div id="attachmentsList" class="attachments-list"></div></div><div class="modal-actions"><button type="button" class="secondary" id="cancelAttachmentModal">关闭</button></div></div></div>
+
+<!-- 门店管理模态框 -->
+<div id="storeModal" class="modal"><div class="modal-content"><div class="modal-header"><h2 class="modal-title" id="storeModalTitle">新增门店</h2><button class="close-modal" id="closeStoreModal">&times;</button></div><form id="storeForm"><input type="hidden" id="storeId"><div class="form-group"><label for="storeName">门店名称 *</label><input type="text" id="storeName" required></div><div class="form-group"><label for="storeAddress">地址</label><input type="text" id="storeAddress"></div><div class="form-group"><label for="storePhone">联系电话</label><input type="text" id="storePhone"></div><div class="form-group"><label for="storeNote">备注</label><textarea id="storeNote" rows="2"></textarea></div><div class="modal-actions"><button type="button" class="secondary" id="cancelStore">取消</button><button type="submit" class="success" id="saveStore">保存</button></div></form></div></div>
+
+<script>
+    // ==================== 会计科目预设为空（用户自行添加）====================
+    let accountCategories = [];   // 无预设科目
+
+    // 保留示例交易数据（方便测试）
+    let transactions = [
+        { date:"2025-01-01", voucher:"001", storeId:1, type:"损益类", primary:"主营业务收入", secondary:"网费收入", detail:"上网费", income:3500, expense:0, payment:"现金", note:"元旦假期，现金收入", attachments:[] },
+        { date:"2025-01-01", voucher:"002", storeId:1, type:"损益类", primary:"其他业务收入", secondary:"美团/抖音团购收入", detail:"", income:1200, expense:0, payment:"建行账户", note:"美团团购收入，入建行账户", attachments:[] },
+        { date:"2025-01-02", voucher:"003", storeId:1, type:"成本类", primary:"管理费用", secondary:"房租", detail:"", income:0, expense:15000, payment:"建行账户", note:"支付第一季度房租，建行转账", attachments:[] },
+        { date:"2025-01-02", voucher:"004", storeId:1, type:"成本类", primary:"主营业务成本", secondary:"商品采购成本", detail:"饮料进货", income:0, expense:2000, payment:"现金", note:"采购可乐、红牛等饮料，现金支付", attachments:[] },
+        { date:"2025-01-03", voucher:"005", storeId:1, type:"成本类", primary:"管理费用-日常消耗品", secondary:"耳机套", detail:"一次性", income:0, expense:300, payment:"现金", note:"采购耳机套200个，现金支付", attachments:[] },
+        { date:"2025-01-05", voucher:"006", storeId:1, type:"资产类", primary:"固定资产", secondary:"电脑主机", detail:"电竞区", income:0, expense:6000, payment:"建行账户", note:"更换3号机主机，建行转账", attachments:[] },
+        { date:"2025-01-10", voucher:"007", storeId:1, type:"成本类", primary:"管理费用", secondary:"员工薪资", detail:"工资", income:0, expense:8000, payment:"建行账户", note:"发放店员本月基本工资，建行转账", attachments:[] },
+        { date:"2025-02-01", voucher:"008", storeId:1, type:"损益类", primary:"主营业务收入", secondary:"网费收入", detail:"上网费", income:3200, expense:0, payment:"现金", note:"2月日常收入", attachments:[] },
+        { date:"2025-02-02", voucher:"009", storeId:1, type:"成本类", primary:"管理费用", secondary:"水电费", detail:"", income:0, expense:1200, payment:"建行账户", note:"2月水电费，建行转账", attachments:[] },
+        { date:"2025-03-01", voucher:"010", storeId:1, type:"损益类", primary:"主营业务收入", secondary:"网费收入", detail:"上网费", income:3800, expense:0, payment:"现金", note:"3月日常收入", attachments:[] },
+        { date:"2025-03-02", voucher:"011", storeId:1, type:"损益类", primary:"主营业务收入", secondary:"商品销售收入", detail:"零食饮料", income:1500, expense:0, payment:"现金", note:"饮料零食销售，现金收入", attachments:[] },
+        { date:"2024-12-25", voucher:"012", storeId:1, type:"损益类", primary:"主营业务收入", secondary:"网费收入", detail:"上网费", income:2800, expense:0, payment:"现金", note:"圣诞节活动收入", attachments:[] },
+        { date:"2023-11-10", voucher:"013", storeId:1, type:"成本类", primary:"管理费用", secondary:"房租", detail:"", income:0, expense:15000, payment:"建行账户", note:"支付季度房租", attachments:[] }
+    ];
+
+    let fixedAssets = [
+        { name:"1号电脑", purchaseDate:"2024-01-01", originalValue:8000, usefulLife:3, monthlyDepreciation:222.22, accumulatedDepreciation:2666.64, netValue:5333.36, location:"A区01号" },
+        { name:"收银台电脑", purchaseDate:"2024-06-15", originalValue:5000, usefulLife:3, monthlyDepreciation:138.89, accumulatedDepreciation:833.34, netValue:4166.66, location:"收银台" }
+    ];
+
+    let accountInitialBalances = { "现金":0, "建行账户":0 };
+    const businessAssumptions = { totalArea:200, totalMachines:30, totalStaff:4, totalInvestment:300000, monthlyFixedCost:25000 };
+    let customPeriodStart = null, customPeriodEnd = null, isCustomPeriodActive = false;
+    let currentAttachmentTransactionIndex = null;
+    let dailyTrendChart, annualTrendChart, profitStructureChart, fullPeriodTrendChart, accountTrendChart, storeCompareChart;
+
+    // DOM 元素引用
+    const dailyTableBody = document.getElementById('dailyTableBody');
+    const categoriesTableBody = document.getElementById('categoriesTableBody');
+    const summaryTableBody = document.getElementById('summaryTableBody');
+    const dailyDetailBody = document.getElementById('dailyDetailBody');
+    const assetsTableBody = document.getElementById('assetsTableBody');
+    const monthlyTrendBody = document.getElementById('monthlyTrendBody');
+    const annualIncomeBody = document.getElementById('annualIncomeBody');
+    const annualExpenseBody = document.getElementById('annualExpenseBody');
+    const costControlBody = document.getElementById('costControlBody');
+    const fullPeriodAnnualBody = document.getElementById('fullPeriodAnnualBody');
+    const fullPeriodIncomeBody = document.getElementById('fullPeriodIncomeBody');
+    const fullPeriodExpenseBody = document.getElementById('fullPeriodExpenseBody');
+    const monthlyAccountBalance = document.getElementById('monthlyAccountBalance');
+    const summaryAccountBalance = document.getElementById('summaryAccountBalance');
+    const annualAccountBalance = document.getElementById('annualAccountBalance');
+    const fullPeriodAccountBalance = document.getElementById('fullPeriodAccountBalance');
+    const accountDetailBody = document.getElementById('accountDetailBody');
+    const accountMonthlyBody = document.getElementById('accountMonthlyBody');
+    const cashInitialBalance = document.getElementById('cashInitialBalance');
+    const bankInitialBalance = document.getElementById('bankInitialBalance');
+    const saveInitialBalance = document.getElementById('saveInitialBalance');
+    const yearSelect = document.getElementById('yearSelect');
+    const monthSelect = document.getElementById('monthSelect');
+    const daySelect = document.getElementById('daySelect');
+    const dateSelectors = document.getElementById('dateSelectors');
+    const categoryModal = document.getElementById('categoryModal');
+    const categoryForm = document.getElementById('categoryForm');
+    const categoryModalTitle = document.getElementById('categoryModalTitle');
+    const closeCategoryModal = document.getElementById('closeCategoryModal');
+    const cancelCategory = document.getElementById('cancelCategory');
+    const attachmentModal = document.getElementById('attachmentModal');
+    const fileInput = document.getElementById('fileInput');
+    const uploadAttachmentBtn = document.getElementById('uploadAttachmentBtn');
+    const attachmentsList = document.getElementById('attachmentsList');
+    const closeAttachmentModal = document.getElementById('closeAttachmentModal');
+    const cancelAttachmentModal = document.getElementById('cancelAttachmentModal');
+    const currentAttachmentCount = document.getElementById('currentAttachmentCount');
+    const customPeriodSelector = document.getElementById('customPeriodSelector');
+    const customStartDate = document.getElementById('customStartDate');
+    const customEndDate = document.getElementById('customEndDate');
+    const applyCustomPeriod = document.getElementById('applyCustomPeriod');
+    const resetCustomPeriod = document.getElementById('resetCustomPeriod');
+    const periodTypeSelect = document.getElementById('periodType');
+    const profitFilterType = document.getElementById('profitFilterType');
+    const profitFilterPrimary = document.getElementById('profitFilterPrimary');
+    const profitFilterSecondary = document.getElementById('profitFilterSecondary');
+    const profitFilterDetail = document.getElementById('profitFilterDetail');
+    const applyProfitFilter = document.getElementById('applyProfitFilter');
+    const resetProfitFilter = document.getElementById('resetProfitFilter');
+    const profitDetailBody = document.getElementById('profitDetailBody');
+    const profitDetailFoot = document.getElementById('profitDetailFoot');
+    const storeSelect = document.getElementById('storeSelect');
+    const storesTableBody = document.getElementById('storesTableBody');
+    const storeCompareBody = document.getElementById('storeCompareBody');
+    const addStoreBtn = document.getElementById('addStore');
+    const storeModal = document.getElementById('storeModal');
+    const storeForm = document.getElementById('storeForm');
+    const storeModalTitle = document.getElementById('storeModalTitle');
+    const closeStoreModal = document.getElementById('closeStoreModal');
+    const cancelStore = document.getElementById('cancelStore');
+    const totalStoresSpan = document.getElementById('totalStores');
+    const compareTotalIncome = document.getElementById('compareTotalIncome');
+    const compareTotalExpense = document.getElementById('compareTotalExpense');
+    const compareTotalProfit = document.getElementById('compareTotalProfit');
+
+    let currentCategoryId = null;
+    let g_currentFilteredTransactions = [];
+    let stores = [{ id:1, name:"总店", address:"总部地址", phone:"", note:"默认门店" }];
+    let selectedStoreId = '';
+    let currentStoreId = null;
+
+    // ========== 工具函数：当科目表为空时提供一个硬编码默认科目（用于新增流水等场景）==========
+    function getDefaultCategory() {
+        if (accountCategories.length === 0) {
+            return { type: '损益类', primary: '主营业务收入', secondary: '网费收入' };
+        }
+        let def = accountCategories.find(c => c.type === '损益类' && c.primary === '主营业务收入' && c.secondary === '网费收入');
+        if (def) return { type: def.type, primary: def.primary, secondary: def.secondary };
+        def = accountCategories.find(c => c.type === '损益类');
+        if (def) return { type: def.type, primary: def.primary, secondary: def.secondary };
+        if (accountCategories.length > 0) {
+            return { type: accountCategories[0].type, primary: accountCategories[0].primary, secondary: accountCategories[0].secondary };
+        }
+        return { type: '损益类', primary: '主营业务收入', secondary: '网费收入' };
+    }
+
+    // ========== 验证并修复交易中的无效科目 ==========
+    function validateTransactionsAgainstCategories() {
+        let changed = false;
+        transactions.forEach(t => {
+            const exists = accountCategories.some(c => c.type === t.type && c.primary === t.primary && c.secondary === t.secondary);
+            if (!exists && accountCategories.length > 0) {
+                const def = getDefaultCategory();
+                t.type = def.type; t.primary = def.primary; t.secondary = def.secondary; t.detail = '';
+                changed = true;
+            }
+        });
+        if (changed) saveDataToStorage();
+    }
+
+    function migrateData() {
+        transactions.forEach(t => {
+            if (t.type === "收入类") t.type = "损益类";
+            if (t.type === "成本费用类") t.type = "成本类";
+            if (t.detail === undefined) t.detail = '';
+            if (t.storeId === undefined) t.storeId = 1;
+        });
+    }
+
+    function loadDataFromStorage() {
+        const savedTransactions = localStorage.getItem('烈马电竞经营_交易数据');
+        const savedAssets = localStorage.getItem('烈马电竞经营_固定资产');
+        const savedCategories = localStorage.getItem('烈马电竞经营_会计科目');
+        const savedCustomPeriod = localStorage.getItem('烈马电竞经营_自定义时间段');
+        const savedAccountBalances = localStorage.getItem('烈马电竞经营_账户初始余额');
+        const savedStores = localStorage.getItem('烈马电竞经营_门店');
+        if (savedTransactions) { transactions = JSON.parse(savedTransactions); transactions.forEach(t => { if (!t.attachments) t.attachments = []; }); }
+        if (savedAssets) fixedAssets = JSON.parse(savedAssets);
+        if (savedCategories) { accountCategories = JSON.parse(savedCategories); accountCategories.forEach(c => { if (c.detail === undefined) c.detail = ''; }); }
+        if (savedAccountBalances) accountInitialBalances = JSON.parse(savedAccountBalances);
+        if (savedStores) stores = JSON.parse(savedStores);
+        else stores = [{ id: 1, name: "总店", address: "总部地址", phone: "", note: "默认门店" }];
+    }
+
+    function loadCustomPeriodSettings() {
+        const saved = localStorage.getItem('烈马电竞经营_自定义时间段');
+        if (saved) {
+            const cp = JSON.parse(saved);
+            customPeriodStart = cp.start; customPeriodEnd = cp.end; isCustomPeriodActive = cp.active;
+            if (customPeriodStart && customPeriodEnd) { customStartDate.value = customPeriodStart; customEndDate.value = customPeriodEnd; }
+        }
+    }
+
+    function loadAccountInitialBalances() {
+        cashInitialBalance.value = accountInitialBalances["现金"] || 0;
+        bankInitialBalance.value = accountInitialBalances["建行账户"] || 0;
+    }
+
+    function saveDataToStorage() {
+        localStorage.setItem('烈马电竞经营_交易数据', JSON.stringify(transactions));
+        localStorage.setItem('烈马电竞经营_固定资产', JSON.stringify(fixedAssets));
+        localStorage.setItem('烈马电竞经营_会计科目', JSON.stringify(accountCategories));
+        localStorage.setItem('烈马电竞经营_自定义时间段', JSON.stringify({ start: customPeriodStart, end: customPeriodEnd, active: isCustomPeriodActive }));
+        localStorage.setItem('烈马电竞经营_账户初始余额', JSON.stringify(accountInitialBalances));
+        localStorage.setItem('烈马电竞经营_门店', JSON.stringify(stores));
+    }
+
+    function populateYearSelect() {
+        yearSelect.innerHTML = '<option value="">选择年份</option>';
+        const yearsSet = new Set(transactions.map(t => t.date.substring(0, 4)));
+        if (yearsSet.size === 0) { const y = new Date().getFullYear(); yearsSet.add(y.toString()); yearsSet.add((y - 1).toString()); }
+        [...yearsSet].sort((a, b) => b - a).forEach(year => { let opt = document.createElement('option'); opt.value = year; opt.textContent = year + '年'; yearSelect.appendChild(opt); });
+    }
+
+    function populateDaySelect() {
+        daySelect.innerHTML = '<option value="">选择日期</option>';
+        for (let i = 1; i <= 31; i++) { let d = i.toString().padStart(2, '0'); let opt = document.createElement('option'); opt.value = d; opt.textContent = i + '日'; daySelect.appendChild(opt); }
+    }
+
+    // ========== 核心渲染 ==========
+    function getUniqueTypes() {
+        const types = new Set(accountCategories.map(c => c.type));
+        const allowed = ["资产类", "负债类", "所有者权益类", "损益类", "成本类"];
+        return [...types].filter(t => allowed.includes(t)).sort((a, b) => allowed.indexOf(a) - allowed.indexOf(b));
+    }
+
+    function getPrimaryOptions(selectedPrimary) {
+        const primarySet = new Set(accountCategories.map(c => c.primary));
+        let opts = '';
+        primarySet.forEach(p => { opts += `<option value="${p}" ${p === selectedPrimary ? 'selected' : ''}>${p}</option>`; });
+        return opts;
+    }
+
+    function getSecondaryOptions(primary, selectedSecondary) {
+        const filtered = accountCategories.filter(c => c.primary === primary);
+        let opts = '';
+        filtered.forEach(c => { opts += `<option value="${c.secondary}" ${c.secondary === selectedSecondary ? 'selected' : ''}>${c.secondary}</option>`; });
+        return opts;
+    }
+
+    function updateSecondaryOptions(selectElement) {
+        const index = parseInt(selectElement.dataset.index);
+        const primary = selectElement.value;
+        const row = selectElement.closest('tr');
+        const secSelect = row.querySelector('select[data-field="secondary"]');
+        secSelect.innerHTML = '<option value="">请选择二级科目</option>' + getSecondaryOptions(primary, '');
+        secSelect.value = '';
+        transactions[index].secondary = '';
+        saveDataToStorage();
+        calculateAll();
+    }
+
+    function handleTransactionChange(e) {
+        const el = e.target;
+        const idx = parseInt(el.dataset.index);
+        const field = el.dataset.field;
+        let val = el.value;
+        if (field === 'income' || field === 'expense') val = parseFloat(val) || 0;
+        else if (field === 'storeId') val = parseInt(val);
+        transactions[idx][field] = val;
+        saveDataToStorage();
+        calculateAll();
+    }
+
+    function getFilteredTransactions() {
+        const type = periodTypeSelect.value;
+        const y = yearSelect.value, m = monthSelect.value, d = daySelect.value;
+        let filtered = selectedStoreId ? transactions.filter(t => t.storeId == selectedStoreId) : [...transactions];
+        if (type === 'custom' && isCustomPeriodActive) filtered = filtered.filter(t => t.date >= customPeriodStart && t.date <= customPeriodEnd);
+        else if (type === 'annual') filtered = y ? filtered.filter(t => t.date.startsWith(y)) : filtered;
+        else if (type === 'monthly') { if (y && m) { const ym = `${y}-${m}`; filtered = filtered.filter(t => t.date.startsWith(ym)); if (d) filtered = filtered.filter(t => t.date === `${ym}-${d}`); } }
+        return filtered;
+    }
+
+    function renderDailyTable() {
+        const filtered = getFilteredTransactions().sort((a, b) => b.date.localeCompare(a.date));
+        const typeOpts = getUniqueTypes().map(t => `<option value="${t}">${t}</option>`).join('');
+        const storeOpts = stores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        dailyTableBody.innerHTML = '';
+        filtered.forEach((t, idx) => {
+            // 如果科目表不为空，确保交易科目有效
+            if (accountCategories.length > 0) {
+                const validPrimary = new Set(accountCategories.map(c => c.primary));
+                if (!validPrimary.has(t.primary)) {
+                    const def = getDefaultCategory();
+                    t.primary = def.primary; t.secondary = def.secondary; t.type = def.type;
+                } else {
+                    const validSec = accountCategories.filter(c => c.primary === t.primary).map(c => c.secondary);
+                    if (!validSec.includes(t.secondary)) {
+                        const first = accountCategories.find(c => c.primary === t.primary);
+                        if (first) t.secondary = first.secondary;
+                        else { const def = getDefaultCategory(); t.primary = def.primary; t.secondary = def.secondary; t.type = def.type; }
+                    }
+                }
+            }
+            const attachCount = t.attachments ? t.attachments.length : 0;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="date" value="${t.date}" data-index="${idx}" data-field="date"></td>
+                <td><input type="text" value="${t.voucher}" data-index="${idx}" data-field="voucher"></td>
+                <td><select data-index="${idx}" data-field="storeId">${storeOpts}</select></td>
+                <td><select data-index="${idx}" data-field="type">${typeOpts}</select></td>
+                <td><select data-index="${idx}" data-field="primary" onchange="updateSecondaryOptions(this)"><option value="">请选择一级科目</option>${getPrimaryOptions(t.primary)}</select></td>
+                <td><select data-index="${idx}" data-field="secondary"><option value="">请选择二级科目</option>${getSecondaryOptions(t.primary, t.secondary)}</select></td>
+                <td><input type="text" value="${t.detail || ''}" data-index="${idx}" data-field="detail" placeholder="明细分类"></td>
+                <td><input type="number" step="0.01" value="${t.income}" data-index="${idx}" data-field="income"></td>
+                <td><input type="number" step="0.01" value="${t.expense}" data-index="${idx}" data-field="expense"></td>
+                <td><select data-index="${idx}" data-field="payment"><option value="现金" ${t.payment === '现金' ? 'selected' : ''}>现金</option><option value="建行账户" ${t.payment === '建行账户' ? 'selected' : ''}>建行账户</option></select></td>
+                <td><input type="text" value="${t.note}" data-index="${idx}" data-field="note"></td>
+                <td class="attachment-container"><button class="attachment-btn" onclick="openAttachmentModal(${idx})">附件${attachCount ? `<span class="attachments-count">${attachCount}</span>` : ''}</button></td>
+                <td><button class="delete-btn" data-index="${idx}" style="background-color:#e74c3c; padding:6px 12px; font-size:0.85rem;">删除</button></td>
+            `;
+            dailyTableBody.appendChild(row);
+            row.querySelector('select[data-field="storeId"]').value = t.storeId;
+            row.querySelector('select[data-field="type"]').value = t.type;
+            row.querySelector('select[data-field="primary"]').value = t.primary;
+            row.querySelector('select[data-field="secondary"]').value = t.secondary;
+        });
+        dailyTableBody.querySelectorAll('input, select').forEach(el => el.addEventListener('change', handleTransactionChange));
+        dailyTableBody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', function () { deleteTransaction(parseInt(this.dataset.index)); }));
+    }
+
+    function deleteTransaction(index) {
+        if (confirm('确定删除这条流水记录吗？')) { transactions.splice(index, 1); saveDataToStorage(); renderDailyTable(); calculateAll(); }
+    }
+
+    function addTransaction() {
+        let date = new Date().toISOString().split('T')[0];
+        const y = yearSelect.value, m = monthSelect.value, d = daySelect.value;
+        if (y && m) date = `${y}-${m}-${d || '01'}`;
+        const def = getDefaultCategory();
+        transactions.push({
+            date, voucher: 'T' + (transactions.length + 1).toString().padStart(3, '0'),
+            storeId: selectedStoreId || 1,
+            type: def.type,
+            primary: def.primary,
+            secondary: def.secondary,
+            detail: '',
+            income: 0, expense: 0, payment: '现金', note: '', attachments: []
+        });
+        saveDataToStorage(); renderDailyTable(); calculateAll();
+    }
+
+    function openAttachmentModal(idx) {
+        currentAttachmentTransactionIndex = idx;
+        const att = transactions[idx].attachments || [];
+        currentAttachmentCount.textContent = att.length;
+        renderAttachmentsList(att);
+        attachmentModal.style.display = 'flex';
+    }
+    function renderAttachmentsList(att) {
+        attachmentsList.innerHTML = '';
+        if (att.length === 0) attachmentsList.innerHTML = '<div style="text-align:center; color:#7f8c8d; padding:20px;">暂无附件</div>';
+        else att.forEach((a, i) => {
+            let d = document.createElement('div');
+            d.className = 'attachment-item';
+            d.innerHTML = `<div class="attachment-info"><div><div class="attachment-name">${a.name}</div><div class="attachment-size">${a.size || 0} B</div></div></div><div class="attachment-actions"><button class="attachment-action-btn" onclick="downloadAttachment(${i})">下载</button><button class="attachment-action-btn danger" onclick="deleteAttachment(${i})">删除</button></div>`;
+            attachmentsList.appendChild(d);
+        });
+    }
+    function handleFileUpload(e) { alert('附件上传演示，实际已保存'); }
+    function downloadAttachment(i) { alert('下载附件演示'); }
+    function deleteAttachment(i) {
+        if (confirm('确定删除？')) {
+            let att = transactions[currentAttachmentTransactionIndex].attachments;
+            att.splice(i, 1);
+            saveDataToStorage();
+            renderAttachmentsList(att);
+            currentAttachmentCount.textContent = att.length;
+        }
+    }
+    function formatFileSize(b) { return b + ' B'; }
+
+    function applyCustomPeriodSettings() {
+        customPeriodStart = customStartDate.value; customPeriodEnd = customEndDate.value;
+        if (!customPeriodStart || !customPeriodEnd) { alert('请选择完整的开始日期和结束日期'); return; }
+        if (customPeriodStart > customPeriodEnd) { alert('开始日期不能晚于结束日期'); return; }
+        isCustomPeriodActive = true; saveDataToStorage(); calculateAll(); alert('已应用自定义时间段');
+    }
+    function resetCustomPeriodSettings() {
+        customStartDate.value = ''; customEndDate.value = ''; customPeriodStart = null; customPeriodEnd = null; isCustomPeriodActive = false; saveDataToStorage(); calculateAll(); alert('已重置自定义时间段');
+    }
+
+    // ========== 计算函数（完整版） ==========
+    function calculateAll() {
+        const filtered = getFilteredTransactions();
+        g_currentFilteredTransactions = filtered;
+        let inc = 0, exp = 0;
+        filtered.forEach(t => { inc += t.income; exp += t.expense; });
+        document.getElementById('totalIncome').textContent = inc.toFixed(2);
+        document.getElementById('totalExpense').textContent = exp.toFixed(2);
+        document.getElementById('monthBalance').textContent = (inc - exp).toFixed(2);
+        document.getElementById('transactionCount').textContent = filtered.length;
+        document.getElementById('monthlyTotalIncome').textContent = inc.toFixed(2);
+        document.getElementById('monthlyTotalExpense').textContent = exp.toFixed(2);
+        document.getElementById('monthlyBalance').textContent = (inc - exp).toFixed(2);
+        const y = yearSelect.value, m = monthSelect.value;
+        if (y && m) {
+            let days = new Date(y, m, 0).getDate();
+            document.getElementById('dailyAvgIncome').textContent = (inc / days).toFixed(2);
+        } else {
+            document.getElementById('dailyAvgIncome').textContent = (0).toFixed(2);
+        }
+
+        renderSummaryTable(filtered);
+        renderDailyDetailTable(filtered);
+
+        let totalDepreciation = 0;
+        fixedAssets.forEach(asset => { totalDepreciation += asset.monthlyDepreciation; });
+
+        const periodType = periodTypeSelect.value;
+        if (periodType === 'annual' || periodType === 'custom' || periodType === 'full') {
+            calculateAnnualStatistics(y, filtered, periodType === 'custom');
+        }
+        if (periodType !== 'full' && periodType !== 'custom') {
+            calculateProfitAnalysis(filtered, totalDepreciation);
+        }
+        if (periodType === 'full' || periodType === 'custom') {
+            calculateFullPeriodStatistics(filtered, periodType === 'custom');
+        }
+        calculateAccountSettlement(filtered, periodType === 'annual' || periodType === 'full' || periodType === 'custom', y);
+
+        const activeTab = document.querySelector('.tab.active').dataset.tab;
+        if (activeTab === 'summary' && periodType === 'monthly' && y && m) {
+            updateDailyTrendChart(filtered, y, m);
+        } else if (activeTab === 'annual' && periodType === 'annual' && y) {
+            updateAnnualTrendChart(y);
+        } else if (activeTab === 'profit' && periodType !== 'full' && periodType !== 'custom') {
+            updateProfitStructureChart(filtered);
+        } else if (activeTab === 'fullPeriod') {
+            updateFullPeriodTrendChart(filtered, periodType === 'custom');
+        } else if (activeTab === 'accounts') {
+            updateAccountTrendChart(filtered, y);
+        }
+
+        renderProfitDetailTable(g_currentFilteredTransactions);
+    }
+
+    function renderSummaryTable(monthTransactions) {
+        summaryTableBody.innerHTML = '';
+        const incomeByCategory = {}, expenseByCategory = {};
+        monthTransactions.forEach(t => {
+            if (t.income > 0) { const key = t.secondary || t.primary; incomeByCategory[key] = (incomeByCategory[key] || 0) + t.income; }
+            if (t.expense > 0) { const key = t.secondary || t.primary; expenseByCategory[key] = (expenseByCategory[key] || 0) + t.expense; }
+        });
+        let totalIncome = 0, totalExpense = 0;
+        Object.keys(incomeByCategory).forEach(key => {
+            const amount = incomeByCategory[key];
+            totalIncome += amount;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${(amount * 12).toFixed(2)}</td><td>${getCategoryDescription(key)}</td>`;
+            summaryTableBody.appendChild(row);
+        });
+        Object.keys(expenseByCategory).forEach(key => {
+            const amount = expenseByCategory[key];
+            totalExpense += amount;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${(amount * 12).toFixed(2)}</td><td>${getCategoryDescription(key)}</td>`;
+            summaryTableBody.appendChild(row);
+        });
+        const incomeTotalRow = document.createElement('tr'); incomeTotalRow.style.backgroundColor = '#f8f9fa';
+        incomeTotalRow.innerHTML = `<td><strong>总收入合计</strong></td><td><strong>${totalIncome.toFixed(2)}</strong></td><td><strong>${(totalIncome * 12).toFixed(2)}</strong></td><td></td>`;
+        summaryTableBody.appendChild(incomeTotalRow);
+        const expenseTotalRow = document.createElement('tr'); expenseTotalRow.style.backgroundColor = '#f8f9fa';
+        expenseTotalRow.innerHTML = `<td><strong>总支出合计</strong></td><td><strong>${totalExpense.toFixed(2)}</strong></td><td><strong>${(totalExpense * 12).toFixed(2)}</strong></td><td></td>`;
+        summaryTableBody.appendChild(expenseTotalRow);
+        const profitRow = document.createElement('tr'); profitRow.style.backgroundColor = '#e8f4fd';
+        profitRow.innerHTML = `<td><strong>经营利润</strong></td><td><strong>${(totalIncome - totalExpense).toFixed(2)}</strong></td><td><strong>${((totalIncome - totalExpense) * 12).toFixed(2)}</strong></td><td>= 总收入 - 总支出</td>`;
+        summaryTableBody.appendChild(profitRow);
+    }
+
+    function renderDailyDetailTable(monthTransactions) {
+        dailyDetailBody.innerHTML = '';
+        const byDate = {};
+        monthTransactions.forEach(t => {
+            const date = t.date;
+            if (!byDate[date]) byDate[date] = { income: 0, expense: 0, count: 0 };
+            byDate[date].income += t.income;
+            byDate[date].expense += t.expense;
+            byDate[date].count += 1;
+        });
+        const sortedDates = Object.keys(byDate).sort();
+        sortedDates.forEach(date => {
+            const d = byDate[date];
+            const balance = d.income - d.expense;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${date}</td><td>${d.income.toFixed(2)}</td><td>${d.expense.toFixed(2)}</td><td style="color:${balance >= 0 ? '#27ae60' : '#e74c3c'}">${balance.toFixed(2)}</td><td>${d.count}</td>`;
+            dailyDetailBody.appendChild(row);
+        });
+        if (sortedDates.length === 0) {
+            dailyDetailBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#7f8c8d;">暂无流水数据</td></tr>';
+        }
+    }
+
+    function getCategoryDescription(cat) {
+        const found = accountCategories.find(item => item.secondary === cat || item.primary === cat);
+        return found ? found.description : '';
+    }
+
+    function updateDailyTrendChart(monthTransactions, year, month) {
+        const ctx = document.getElementById('dailyTrendChart').getContext('2d');
+        if (dailyTrendChart) dailyTrendChart.destroy();
+        const byDate = {};
+        monthTransactions.forEach(t => { if (!byDate[t.date]) byDate[t.date] = { income: 0, expense: 0 }; byDate[t.date].income += t.income; byDate[t.date].expense += t.expense; });
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const labels = [], incomeData = [], expenseData = [], profitData = [];
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = `${year}-${month.padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            labels.push(`${month}月${day}日`);
+            const data = byDate[date] || { income: 0, expense: 0 };
+            incomeData.push(data.income);
+            expenseData.push(data.expense);
+            profitData.push(data.income - data.expense);
+        }
+        dailyTrendChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '收入', data: incomeData, backgroundColor: 'rgba(39,174,96,0.7)', borderColor: '#27ae60', borderWidth: 1 },
+                    { label: '支出', data: expenseData, backgroundColor: 'rgba(231,76,60,0.7)', borderColor: '#e74c3c', borderWidth: 1 },
+                    { label: '利润', data: profitData, type: 'line', borderColor: '#3498db', backgroundColor: 'rgba(52,152,219,0.1)', borderWidth: 2, fill: true, tension: 0.3 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { title: { display: true, text: `${year}年${month}月每日收支趋势图`, font: { size: 16 } } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '金额（元）' } } }
+            }
+        });
+    }
+
+    function updateAnnualTrendChart(year) {
+        const ctx = document.getElementById('annualTrendChart').getContext('2d');
+        if (annualTrendChart) annualTrendChart.destroy();
+        const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+        const incomeData = [], expenseData = [], profitData = [];
+        for (let i = 1; i <= 12; i++) {
+            const month = i.toString().padStart(2, '0');
+            const monthStr = `${year}-${month}`;
+            const monthTransactions = transactions.filter(t => t.date.startsWith(monthStr));
+            let monthIncome = 0, monthExpense = 0;
+            monthTransactions.forEach(t => { monthIncome += t.income; monthExpense += t.expense; });
+            const monthProfit = monthIncome - monthExpense;
+            incomeData.push(monthIncome);
+            expenseData.push(monthExpense);
+            profitData.push(monthProfit);
+        }
+        annualTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    { label: '收入', data: incomeData, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', borderWidth: 2, fill: true },
+                    { label: '支出', data: expenseData, borderColor: '#e74c3c', backgroundColor: 'rgba(231,76,60,0.1)', borderWidth: 2, fill: true },
+                    { label: '利润', data: profitData, borderColor: '#3498db', backgroundColor: 'rgba(52,152,219,0.1)', borderWidth: 2, fill: true }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { title: { display: true, text: `${year}年度收入支出趋势图`, font: { size: 16 } } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '金额（元）' } } }
+            }
+        });
+    }
+
+    function updateProfitStructureChart(monthTransactions) {
+        const ctx = document.getElementById('profitStructureChart').getContext('2d');
+        if (profitStructureChart) profitStructureChart.destroy();
+        let totalIncome = 0, goodsCost = 0, operatingCost = 0, depreciation = 0;
+        monthTransactions.forEach(t => {
+            totalIncome += t.income;
+            if (t.primary === '主营业务成本' && t.secondary === '商品采购成本') goodsCost += t.expense;
+            else if (t.expense > 0) operatingCost += t.expense;
+        });
+        fixedAssets.forEach(asset => depreciation += asset.monthlyDepreciation);
+        const grossProfit = totalIncome - goodsCost;
+        const operatingProfit = grossProfit - operatingCost;
+        const netProfit = operatingProfit - depreciation;
+        profitStructureChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['商品成本', '运营费用', '折旧摊销', '净利润'],
+                datasets: [{
+                    data: [goodsCost, operatingCost, depreciation, netProfit > 0 ? netProfit : 0],
+                    backgroundColor: ['#e74c3c', '#f39c12', '#95a5a6', '#27ae60'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: '利润结构分析', font: { size: 16 } },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                const label = context.label || '';
+                                const val = context.raw || 0;
+                                const total = goodsCost + operatingCost + depreciation + (netProfit > 0 ? netProfit : 0);
+                                const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                return `${label}: ${val.toFixed(2)}元 (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function updateFullPeriodTrendChart(filteredTransactions, isCustom) {
+        const ctx = document.getElementById('fullPeriodTrendChart').getContext('2d');
+        if (fullPeriodTrendChart) fullPeriodTrendChart.destroy();
+        const monthsSet = new Set();
+        filteredTransactions.forEach(t => monthsSet.add(t.date.substring(0, 7)));
+        const months = Array.from(monthsSet).sort();
+        const labels = [], incomeData = [], expenseData = [], profitData = [];
+        months.forEach(ms => {
+            const year = parseInt(ms.substring(0, 4)), month = parseInt(ms.substring(5, 7));
+            labels.push(`${year}年${month}月`);
+            const monthTx = filteredTransactions.filter(t => t.date.startsWith(ms));
+            let inc = 0, exp = 0;
+            monthTx.forEach(t => { inc += t.income; exp += t.expense; });
+            incomeData.push(inc);
+            expenseData.push(exp);
+            profitData.push(inc - exp);
+        });
+        const chartTitle = isCustom ? `自定义时间段 (${customPeriodStart} 至 ${customPeriodEnd}) 收支趋势图` : '全周期收入支出趋势图';
+        fullPeriodTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '收入', data: incomeData, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', borderWidth: 2, fill: true },
+                    { label: '支出', data: expenseData, borderColor: '#e74c3c', backgroundColor: 'rgba(231,76,60,0.1)', borderWidth: 2, fill: true },
+                    { label: '利润', data: profitData, borderColor: '#3498db', backgroundColor: 'rgba(52,152,219,0.1)', borderWidth: 2, fill: true }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { title: { display: true, text: chartTitle, font: { size: 16 } } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '金额（元）' } } }
+            }
+        });
+    }
+
+    function updateAccountTrendChart(filteredTransactions, selectedYear) {
+        const ctx = document.getElementById('accountTrendChart').getContext('2d');
+        if (accountTrendChart) accountTrendChart.destroy();
+        const monthsSet = new Set();
+        filteredTransactions.forEach(t => { monthsSet.add(t.date.substring(0, 7)); });
+        const months = Array.from(monthsSet).sort();
+        const labels = [], cashIncomeData = [], cashExpenseData = [], bankIncomeData = [], bankExpenseData = [];
+        months.forEach(monthStr => {
+            const year = parseInt(monthStr.substring(0, 4));
+            const month = parseInt(monthStr.substring(5, 7));
+            labels.push(`${year}年${month}月`);
+            const monthTransactions = filteredTransactions.filter(t => t.date.startsWith(monthStr));
+            let cashIncome = 0, cashExpense = 0, bankIncome = 0, bankExpense = 0;
+            monthTransactions.forEach(t => {
+                if (t.payment === '现金') {
+                    cashIncome += t.income;
+                    cashExpense += t.expense;
+                } else if (t.payment === '建行账户') {
+                    bankIncome += t.income;
+                    bankExpense += t.expense;
+                }
+            });
+            cashIncomeData.push(cashIncome);
+            cashExpenseData.push(cashExpense);
+            bankIncomeData.push(bankIncome);
+            bankExpenseData.push(bankExpense);
+        });
+        accountTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '现金收入', data: cashIncomeData, borderColor: '#27ae60', backgroundColor: 'rgba(39,174,96,0.1)', borderWidth: 2, fill: true },
+                    { label: '现金支出', data: cashExpenseData, borderColor: '#e74c3c', backgroundColor: 'rgba(231,76,60,0.1)', borderWidth: 2, fill: true },
+                    { label: '建行收入', data: bankIncomeData, borderColor: '#3498db', backgroundColor: 'rgba(52,152,219,0.1)', borderWidth: 2, fill: true },
+                    { label: '建行支出', data: bankExpenseData, borderColor: '#9b59b6', backgroundColor: 'rgba(155,89,182,0.1)', borderWidth: 2, fill: true }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { title: { display: true, text: '账户收支趋势图', font: { size: 16 } } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '金额（元）' } } }
+            }
+        });
+    }
+
+    function calculateAnnualStatistics(year, annualTransactions, isCustomPeriod) {
+        let annualIncome = 0, annualExpense = 0, goodsCost = 0, operatingCost = 0;
+        annualTransactions.forEach(t => {
+            annualIncome += t.income;
+            annualExpense += t.expense;
+            if (t.primary === '主营业务成本' && t.secondary === '商品采购成本') goodsCost += t.expense;
+            if (t.expense > 0 && !(t.primary === '主营业务成本' && t.secondary === '商品采购成本')) operatingCost += t.expense;
+        });
+        let annualDepreciation = 0;
+        fixedAssets.forEach(asset => { annualDepreciation += asset.monthlyDepreciation * 12; });
+        const annualNetProfit = annualIncome - annualExpense - annualDepreciation;
+        const annualProfitMargin = annualIncome > 0 ? (annualNetProfit / annualIncome * 100) : 0;
+        document.getElementById('annualTotalIncome').textContent = annualIncome.toFixed(2);
+        document.getElementById('annualTotalExpense').textContent = annualExpense.toFixed(2);
+        document.getElementById('annualNetProfit').textContent = annualNetProfit.toFixed(2);
+        document.getElementById('annualProfitMargin').textContent = annualProfitMargin.toFixed(1) + '%';
+        if (!isCustomPeriod && year) renderMonthlyTrendTable(year);
+        renderAnnualIncomeTable(annualTransactions, annualIncome);
+        renderAnnualExpenseTable(annualTransactions, annualExpense);
+    }
+
+    function renderMonthlyTrendTable(year) {
+        monthlyTrendBody.innerHTML = '';
+        const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        let previousMonthProfit = null;
+        months.forEach(month => {
+            const monthStr = `${year}-${month}`;
+            const monthTransactions = transactions.filter(t => t.date.startsWith(monthStr));
+            let monthIncome = 0, monthExpense = 0;
+            monthTransactions.forEach(t => { monthIncome += t.income; monthExpense += t.expense; });
+            const monthProfit = monthIncome - monthExpense;
+            const profitMargin = monthIncome > 0 ? (monthProfit / monthIncome * 100) : 0;
+            let changeText = '-', changeClass = 'profit-neutral';
+            if (previousMonthProfit !== null && previousMonthProfit !== 0) {
+                const change = ((monthProfit - previousMonthProfit) / Math.abs(previousMonthProfit) * 100);
+                changeText = change > 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
+                changeClass = change > 0 ? 'profit-positive' : (change < 0 ? 'profit-negative' : 'profit-neutral');
+            }
+            previousMonthProfit = monthProfit;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${year}年${parseInt(month)}月</td>
+                <td>${monthIncome.toFixed(2)}</td>
+                <td>${monthExpense.toFixed(2)}</td>
+                <td>${monthProfit.toFixed(2)}</td>
+                <td>${profitMargin.toFixed(1)}%</td>
+                <td><span class="profit-indicator ${changeClass}">${changeText}</span></td>
+            `;
+            monthlyTrendBody.appendChild(row);
+        });
+    }
+
+    function renderAnnualIncomeTable(annualTransactions, annualIncome) {
+        annualIncomeBody.innerHTML = '';
+        const incomeByCategory = {};
+        annualTransactions.forEach(t => { if (t.income > 0) { const key = t.secondary || t.primary; incomeByCategory[key] = (incomeByCategory[key] || 0) + t.income; } });
+        Object.keys(incomeByCategory).forEach(key => {
+            const amount = incomeByCategory[key];
+            const percentage = annualIncome > 0 ? (amount / annualIncome * 100) : 0;
+            const monthlyAvg = amount / 12;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${percentage.toFixed(1)}%</td><td>${monthlyAvg.toFixed(2)}</td>`;
+            annualIncomeBody.appendChild(row);
+        });
+        if (Object.keys(incomeByCategory).length === 0) {
+            annualIncomeBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">暂无收入数据</td></tr>';
+        }
+    }
+
+    function renderAnnualExpenseTable(annualTransactions, annualExpense) {
+        annualExpenseBody.innerHTML = '';
+        const expenseByCategory = {};
+        annualTransactions.forEach(t => { if (t.expense > 0) { const key = t.secondary || t.primary; expenseByCategory[key] = (expenseByCategory[key] || 0) + t.expense; } });
+        Object.keys(expenseByCategory).forEach(key => {
+            const amount = expenseByCategory[key];
+            const percentage = annualExpense > 0 ? (amount / annualExpense * 100) : 0;
+            const monthlyAvg = amount / 12;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${percentage.toFixed(1)}%</td><td>${monthlyAvg.toFixed(2)}</td>`;
+            annualExpenseBody.appendChild(row);
+        });
+        if (Object.keys(expenseByCategory).length === 0) {
+            annualExpenseBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">暂无支出数据</td></tr>';
+        }
+    }
+
+    function calculateFullPeriodStatistics(filteredTransactions, isCustomPeriod) {
+        let fullPeriodIncome = 0, fullPeriodExpense = 0;
+        filteredTransactions.forEach(t => { fullPeriodIncome += t.income; fullPeriodExpense += t.expense; });
+        let fullPeriodDepreciation = 0;
+        const currentDate = new Date();
+        fixedAssets.forEach(asset => {
+            const purchaseDate = new Date(asset.purchaseDate);
+            const monthsDiff = (currentDate.getFullYear() - purchaseDate.getFullYear()) * 12 + (currentDate.getMonth() - purchaseDate.getMonth());
+            fullPeriodDepreciation += asset.monthlyDepreciation * monthsDiff;
+        });
+        const fullPeriodNetProfit = fullPeriodIncome - fullPeriodExpense - fullPeriodDepreciation;
+        const fullPeriodProfitMargin = fullPeriodIncome > 0 ? (fullPeriodNetProfit / fullPeriodIncome * 100) : 0;
+        let monthsSet = new Set();
+        filteredTransactions.forEach(t => { monthsSet.add(t.date.substring(0, 7)); });
+        const operatingMonths = monthsSet.size;
+        const monthlyAvgProfit = operatingMonths > 0 ? fullPeriodNetProfit / operatingMonths : 0;
+        document.getElementById('fullPeriodTotalIncome').textContent = fullPeriodIncome.toFixed(2);
+        document.getElementById('fullPeriodTotalExpense').textContent = fullPeriodExpense.toFixed(2);
+        document.getElementById('fullPeriodNetProfit').textContent = fullPeriodNetProfit.toFixed(2);
+        document.getElementById('fullPeriodProfitMargin').textContent = fullPeriodProfitMargin.toFixed(1) + '%';
+        document.getElementById('operatingMonths').textContent = operatingMonths;
+        document.getElementById('monthlyAvgProfit').textContent = monthlyAvgProfit.toFixed(2);
+        if (!isCustomPeriod) renderFullPeriodAnnualTable();
+        renderFullPeriodIncomeTable(filteredTransactions, fullPeriodIncome);
+        renderFullPeriodExpenseTable(filteredTransactions, fullPeriodExpense);
+    }
+
+    function renderFullPeriodAnnualTable() {
+        fullPeriodAnnualBody.innerHTML = '';
+        const yearsSet = new Set();
+        transactions.forEach(t => yearsSet.add(t.date.substring(0, 4)));
+        const years = Array.from(yearsSet).sort();
+        let previousYearProfit = null;
+        years.forEach(year => {
+            const yearTransactions = transactions.filter(t => t.date.startsWith(year));
+            let yearIncome = 0, yearExpense = 0;
+            yearTransactions.forEach(t => { yearIncome += t.income; yearExpense += t.expense; });
+            const yearProfit = yearIncome - yearExpense;
+            const profitMargin = yearIncome > 0 ? (yearProfit / yearIncome * 100) : 0;
+            let changeText = '-', changeClass = 'profit-neutral';
+            if (previousYearProfit !== null && previousYearProfit !== 0) {
+                const change = ((yearProfit - previousYearProfit) / Math.abs(previousYearProfit) * 100);
+                changeText = change > 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
+                changeClass = change > 0 ? 'profit-positive' : (change < 0 ? 'profit-negative' : 'profit-neutral');
+            }
+            previousYearProfit = yearProfit;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${year}年</td>
+                <td>${yearIncome.toFixed(2)}</td>
+                <td>${yearExpense.toFixed(2)}</td>
+                <td>${yearProfit.toFixed(2)}</td>
+                <td>${profitMargin.toFixed(1)}%</td>
+                <td><span class="profit-indicator ${changeClass}">${changeText}</span></td>
+            `;
+            fullPeriodAnnualBody.appendChild(row);
+        });
+        if (years.length === 0) {
+            fullPeriodAnnualBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#7f8c8d;">暂无年度数据</td></tr>';
+        }
+    }
+
+    function renderFullPeriodIncomeTable(filteredTransactions, fullPeriodIncome) {
+        fullPeriodIncomeBody.innerHTML = '';
+        const incomeByCategory = {};
+        filteredTransactions.forEach(t => { if (t.income > 0) { const key = t.secondary || t.primary; incomeByCategory[key] = (incomeByCategory[key] || 0) + t.income; } });
+        let monthsSet = new Set();
+        filteredTransactions.forEach(t => monthsSet.add(t.date.substring(0, 7)));
+        const operatingMonths = monthsSet.size;
+        Object.keys(incomeByCategory).forEach(key => {
+            const amount = incomeByCategory[key];
+            const percentage = fullPeriodIncome > 0 ? (amount / fullPeriodIncome * 100) : 0;
+            const monthlyAvg = operatingMonths > 0 ? amount / operatingMonths : 0;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${percentage.toFixed(1)}%</td><td>${monthlyAvg.toFixed(2)}</td>`;
+            fullPeriodIncomeBody.appendChild(row);
+        });
+        if (Object.keys(incomeByCategory).length === 0) {
+            fullPeriodIncomeBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">暂无收入数据</td></tr>';
+        }
+    }
+
+    function renderFullPeriodExpenseTable(filteredTransactions, fullPeriodExpense) {
+        fullPeriodExpenseBody.innerHTML = '';
+        const expenseByCategory = {};
+        filteredTransactions.forEach(t => { if (t.expense > 0) { const key = t.secondary || t.primary; expenseByCategory[key] = (expenseByCategory[key] || 0) + t.expense; } });
+        let monthsSet = new Set();
+        filteredTransactions.forEach(t => monthsSet.add(t.date.substring(0, 7)));
+        const operatingMonths = monthsSet.size;
+        Object.keys(expenseByCategory).forEach(key => {
+            const amount = expenseByCategory[key];
+            const percentage = fullPeriodExpense > 0 ? (amount / fullPeriodExpense * 100) : 0;
+            const monthlyAvg = operatingMonths > 0 ? amount / operatingMonths : 0;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${amount.toFixed(2)}</td><td>${percentage.toFixed(1)}%</td><td>${monthlyAvg.toFixed(2)}</td>`;
+            fullPeriodExpenseBody.appendChild(row);
+        });
+        if (Object.keys(expenseByCategory).length === 0) {
+            fullPeriodExpenseBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">暂无支出数据</td></tr>';
+        }
+    }
+
+    function calculateProfitAnalysis(monthTransactions, totalDepreciation) {
+        let totalIncome = 0, totalExpense = 0, goodsCost = 0, operatingCost = 0;
+        monthTransactions.forEach(t => {
+            totalIncome += t.income;
+            totalExpense += t.expense;
+            if (t.primary === '主营业务成本' && t.secondary === '商品采购成本') goodsCost += t.expense;
+            if (t.expense > 0 && !(t.primary === '主营业务成本' && t.secondary === '商品采购成本')) operatingCost += t.expense;
+        });
+        const grossProfit = totalIncome - goodsCost;
+        const operatingProfit = grossProfit - operatingCost;
+        const netProfit = operatingProfit - totalDepreciation;
+        const grossProfitMargin = totalIncome > 0 ? (grossProfit / totalIncome * 100) : 0;
+        const operatingProfitMargin = totalIncome > 0 ? (operatingProfit / totalIncome * 100) : 0;
+        const netProfitMargin = totalIncome > 0 ? (netProfit / totalIncome * 100) : 0;
+        const costIncomeRatio = totalIncome > 0 ? (totalExpense / totalIncome * 100) : 0;
+
+        document.getElementById('profitIncome').textContent = totalIncome.toFixed(2);
+        document.getElementById('goodsCost').textContent = goodsCost.toFixed(2);
+        document.getElementById('grossProfit').textContent = grossProfit.toFixed(2);
+        document.getElementById('operatingCost').textContent = operatingCost.toFixed(2);
+        document.getElementById('operatingProfit').textContent = operatingProfit.toFixed(2);
+        document.getElementById('depreciationAmortization').textContent = totalDepreciation.toFixed(2);
+        document.getElementById('netProfit').textContent = netProfit.toFixed(2);
+        document.getElementById('grossProfitMargin').textContent = grossProfitMargin.toFixed(1) + '%';
+        document.getElementById('operatingProfitMargin').textContent = operatingProfitMargin.toFixed(1) + '%';
+        document.getElementById('netProfitMargin').textContent = netProfitMargin.toFixed(1) + '%';
+        document.getElementById('costIncomeRatio').textContent = costIncomeRatio.toFixed(1) + '%';
+
+        calculateProfitabilityIndicators(totalIncome, netProfit);
+        renderCostControlTable(monthTransactions);
+    }
+
+    function calculateProfitabilityIndicators(totalIncome, netProfit) {
+        const daysInMonth = 30;
+        const perMachineDailyIncome = businessAssumptions.totalMachines > 0 ? (totalIncome / businessAssumptions.totalMachines / daysInMonth) : 0;
+        const areaEfficiency = businessAssumptions.totalArea > 0 ? (totalIncome / businessAssumptions.totalArea) : 0;
+        const staffEfficiency = businessAssumptions.totalStaff > 0 ? (totalIncome / businessAssumptions.totalStaff) : 0;
+        const annualNetProfit = netProfit * 12;
+        const roi = businessAssumptions.totalInvestment > 0 ? (annualNetProfit / businessAssumptions.totalInvestment * 100) : 0;
+        const breakEvenPoint = businessAssumptions.monthlyFixedCost;
+        const safetyMargin = totalIncome > breakEvenPoint ? ((totalIncome - breakEvenPoint) / totalIncome * 100) : 0;
+
+        document.getElementById('perMachineDailyIncome').textContent = perMachineDailyIncome.toFixed(2);
+        document.getElementById('areaEfficiency').textContent = areaEfficiency.toFixed(2);
+        document.getElementById('staffEfficiency').textContent = staffEfficiency.toFixed(2);
+        document.getElementById('roi').textContent = roi.toFixed(1) + '%';
+        document.getElementById('breakEvenPoint').textContent = breakEvenPoint.toFixed(0);
+        document.getElementById('safetyMargin').textContent = safetyMargin.toFixed(1) + '%';
+    }
+
+    function renderCostControlTable(monthTransactions) {
+        costControlBody.innerHTML = '';
+        const expenseTransactions = monthTransactions.filter(t => t.expense > 0 && (t.type === '成本类' || t.type === '损益类'));
+        const totalExpense = expenseTransactions.reduce((acc, t) => acc + t.expense, 0);
+        const categoryMap = new Map();
+        expenseTransactions.forEach(t => {
+            const key = t.secondary || t.primary || '其他支出';
+            const amount = t.expense;
+            if (categoryMap.has(key)) {
+                categoryMap.set(key, categoryMap.get(key) + amount);
+            } else {
+                categoryMap.set(key, amount);
+            }
+        });
+        const sorted = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1]);
+        if (sorted.length === 0) {
+            costControlBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#7f8c8d;">当前期间无符合条件的支出记录</td></tr>';
+            return;
+        }
+        sorted.forEach(([category, amount]) => {
+            const percentage = totalExpense > 0 ? (amount / totalExpense * 100) : 0;
+            let suggestion = '';
+            if (percentage > 30) suggestion = '支出占比较高，需关注';
+            else if (percentage > 15) suggestion = '正常支出';
+            else suggestion = '较低';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${category}</td>
+                <td>${amount.toFixed(2)}</td>
+                <td>${percentage.toFixed(1)}%</td>
+                <td>-</td>
+                <td>-</td>
+                <td>${suggestion}</td>
+            `;
+            costControlBody.appendChild(row);
+        });
+        const totalRow = document.createElement('tr');
+        totalRow.style.backgroundColor = '#f8f9fa';
+        totalRow.style.fontWeight = 'bold';
+        totalRow.innerHTML = `
+            <td>合计</td>
+            <td>${totalExpense.toFixed(2)}</td>
+            <td>100%</td>
+            <td>-</td>
+            <td>-</td>
+            <td></td>
+        `;
+        costControlBody.appendChild(totalRow);
+    }
+
+    function calculateAccountSettlement(filteredTransactions, isPeriod = false, selectedYear = '') {
+        const accountTypes = ["现金", "建行账户"];
+        let accountStats = {};
+        accountTypes.forEach(account => {
+            accountStats[account] = { income: 0, expense: 0, transactions: 0 };
+        });
+        filteredTransactions.forEach(transaction => {
+            const account = transaction.payment;
+            if (accountStats[account]) {
+                accountStats[account].income += transaction.income;
+                accountStats[account].expense += transaction.expense;
+                accountStats[account].transactions += 1;
+            }
+        });
+        let totalAccountBalance = 0;
+        accountTypes.forEach(account => {
+            const initialBalance = accountInitialBalances[account] || 0;
+            const balance = initialBalance + accountStats[account].income - accountStats[account].expense;
+            accountStats[account].balance = balance;
+            totalAccountBalance += balance;
+        });
+
+        document.getElementById('cashAccountBalance').textContent = accountStats["现金"].balance.toFixed(2);
+        document.getElementById('bankAccountBalance').textContent = accountStats["建行账户"].balance.toFixed(2);
+        document.getElementById('totalAccountBalance').textContent = totalAccountBalance.toFixed(2);
+        document.getElementById('accountTransactionCount').textContent = filteredTransactions.length;
+
+        updateAccountBalanceCards(accountStats, "monthlyAccountBalance");
+        updateAccountBalanceCards(accountStats, "summaryAccountBalance");
+        updateAccountBalanceCards(accountStats, "annualAccountBalance");
+        updateAccountBalanceCards(accountStats, "fullPeriodAccountBalance");
+
+        renderAccountDetailTable(accountStats);
+        if (!isPeriod) renderAccountMonthlyTable(selectedYear);
+    }
+
+    function updateAccountBalanceCards(accountStats, elementId) {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+        container.innerHTML = '';
+        for (const [account, stats] of Object.entries(accountStats)) {
+            const initialBalance = accountInitialBalances[account] || 0;
+            const balance = stats.balance;
+            const isPositive = balance >= 0;
+            const accountItem = document.createElement('div');
+            accountItem.className = `account-item ${account === '现金' ? 'cash' : 'bank'}`;
+            accountItem.innerHTML = `
+                <div class="account-name">${account}</div>
+                <div class="balance ${isPositive ? 'positive' : 'negative'}">${balance.toFixed(2)}</div>
+                <div style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">
+                    收入: ${stats.income.toFixed(2)} | 支出: ${stats.expense.toFixed(2)}
+                </div>
+                <div style="font-size: 0.85rem; color: #7f8c8d; margin-top: 3px;">
+                    初始余额: ${initialBalance.toFixed(2)} | 交易笔数: ${stats.transactions}
+                </div>
+            `;
+            container.appendChild(accountItem);
+        }
+    }
+
+    function renderAccountDetailTable(accountStats) {
+        accountDetailBody.innerHTML = '';
+        let totalInitialBalance = 0, totalIncome = 0, totalExpense = 0, totalBalance = 0, totalTransactions = 0;
+        for (const [account, stats] of Object.entries(accountStats)) {
+            const initialBalance = accountInitialBalances[account] || 0;
+            const balance = stats.balance;
+            totalInitialBalance += initialBalance;
+            totalIncome += stats.income;
+            totalExpense += stats.expense;
+            totalBalance += balance;
+            totalTransactions += stats.transactions;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${account}</td>
+                <td>${initialBalance.toFixed(2)}</td>
+                <td>${stats.income.toFixed(2)}</td>
+                <td>${stats.expense.toFixed(2)}</td>
+                <td style="color: ${balance >= 0 ? '#27ae60' : '#e74c3c'}">${balance.toFixed(2)}</td>
+                <td>${stats.transactions}</td>
+            `;
+            accountDetailBody.appendChild(row);
+        }
+        const totalRow = document.createElement('tr');
+        totalRow.style.backgroundColor = '#f8f9fa';
+        totalRow.style.fontWeight = 'bold';
+        totalRow.innerHTML = `
+            <td>总计</td>
+            <td>${totalInitialBalance.toFixed(2)}</td>
+            <td>${totalIncome.toFixed(2)}</td>
+            <td>${totalExpense.toFixed(2)}</td>
+            <td style="color: ${totalBalance >= 0 ? '#27ae60' : '#e74c3c'}">${totalBalance.toFixed(2)}</td>
+            <td>${totalTransactions}</td>
+        `;
+        accountDetailBody.appendChild(totalRow);
+    }
+
+    function renderAccountMonthlyTable(selectedYear) {
+        accountMonthlyBody.innerHTML = '';
+        const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        const currentYear = selectedYear || new Date().getFullYear().toString();
+        months.forEach(month => {
+            const monthStr = `${currentYear}-${month}`;
+            const monthTransactions = transactions.filter(t => t.date.startsWith(monthStr));
+            let cashIncome = 0, cashExpense = 0, bankIncome = 0, bankExpense = 0;
+            monthTransactions.forEach(t => {
+                if (t.payment === '现金') {
+                    cashIncome += t.income;
+                    cashExpense += t.expense;
+                } else if (t.payment === '建行账户') {
+                    bankIncome += t.income;
+                    bankExpense += t.expense;
+                }
+            });
+            const cashBalance = cashIncome - cashExpense;
+            const bankBalance = bankIncome - bankExpense;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${currentYear}年${parseInt(month)}月</td>
+                <td>${cashIncome.toFixed(2)}</td>
+                <td>${cashExpense.toFixed(2)}</td>
+                <td style="color: ${cashBalance >= 0 ? '#27ae60' : '#e74c3c'}">${cashBalance.toFixed(2)}</td>
+                <td>${bankIncome.toFixed(2)}</td>
+                <td>${bankExpense.toFixed(2)}</td>
+                <td style="color: ${bankBalance >= 0 ? '#27ae60' : '#e74c3c'}">${bankBalance.toFixed(2)}</td>
+            `;
+            accountMonthlyBody.appendChild(row);
+        });
+    }
+
+    // ========== 利润筛选 ==========
+    function populateProfitFilterDropdowns() {
+        const typeSet = new Set(); typeSet.add('');
+        const primarySet = new Set(); primarySet.add('');
+        const secondarySet = new Set(); secondarySet.add('');
+        const detailSet = new Set(); detailSet.add('');
+
+        accountCategories.forEach(c => {
+            if (c.type) typeSet.add(c.type);
+            if (c.primary) primarySet.add(c.primary);
+            if (c.secondary) secondarySet.add(c.secondary);
+            if (c.detail && c.detail.trim() !== '') detailSet.add(c.detail);
+        });
+
+        const allowedTypes = ['资产类', '负债类', '所有者权益类', '损益类', '成本类'];
+        const filteredTypes = Array.from(typeSet).filter(v => v === '' || allowedTypes.includes(v));
+
+        profitFilterType.innerHTML = '<option value="">全部一级分类</option>';
+        filteredTypes.sort().forEach(v => { if (v !== '') profitFilterType.innerHTML += `<option value="${v}">${v}</option>`; });
+
+        profitFilterPrimary.innerHTML = '<option value="">全部一级科目</option>';
+        Array.from(primarySet).sort().forEach(v => { if (v !== '') profitFilterPrimary.innerHTML += `<option value="${v}">${v}</option>`; });
+
+        profitFilterSecondary.innerHTML = '<option value="">全部二级科目</option>';
+        Array.from(secondarySet).sort().forEach(v => { if (v !== '') profitFilterSecondary.innerHTML += `<option value="${v}">${v}</option>`; });
+
+        profitFilterDetail.innerHTML = '<option value="">全部明细分类</option>';
+        Array.from(detailSet).sort().forEach(v => { if (v !== '') profitFilterDetail.innerHTML += `<option value="${v}">${v}</option>`; });
+    }
+
+    function renderProfitDetailTable(transactionsArray) {
+        const type = profitFilterType.value;
+        const primary = profitFilterPrimary.value;
+        const secondary = profitFilterSecondary.value;
+        const detail = profitFilterDetail.value;
+
+        let filtered = transactionsArray;
+        if (type) filtered = filtered.filter(t => t.type === type);
+        if (primary) filtered = filtered.filter(t => t.primary === primary);
+        if (secondary) filtered = filtered.filter(t => t.secondary === secondary);
+        if (detail) filtered = filtered.filter(t => (t.detail || '') === detail);
+
+        const map = new Map();
+        filtered.forEach(t => {
+            const key = `${t.type}|${t.primary}|${t.secondary}|${t.detail || ''}`;
+            if (!map.has(key)) {
+                map.set(key, { type: t.type, primary: t.primary, secondary: t.secondary, detail: t.detail || '', income: 0, expense: 0 });
+            }
+            const item = map.get(key);
+            item.income += t.income;
+            item.expense += t.expense;
+        });
+
+        const sorted = Array.from(map.values()).sort((a, b) => {
+            if (a.type !== b.type) return a.type.localeCompare(b.type);
+            if (a.primary !== b.primary) return a.primary.localeCompare(b.primary);
+            if (a.secondary !== b.secondary) return a.secondary.localeCompare(b.secondary);
+            return (a.detail || '').localeCompare(b.detail || '');
+        });
+
+        profitDetailBody.innerHTML = '';
+        let totalIncome = 0, totalExpense = 0;
+
+        sorted.forEach(item => {
+            const net = item.income - item.expense;
+            totalIncome += item.income;
+            totalExpense += item.expense;
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.type}</td><td>${item.primary}</td><td>${item.secondary}</td><td>${item.detail || '-'}</td><td>${item.income.toFixed(2)}</td><td>${item.expense.toFixed(2)}</td><td style="color:${net >= 0 ? '#27ae60' : '#e74c3c'}">${net.toFixed(2)}</td>`;
+            profitDetailBody.appendChild(row);
+        });
+
+        if (sorted.length === 0) {
+            profitDetailBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#7f8c8d;">没有符合条件的交易记录</td></tr>';
+        }
+
+        const totalNet = totalIncome - totalExpense;
+        profitDetailFoot.innerHTML = `<tr><td colspan="4" style="text-align:right;">合计</td><td>${totalIncome.toFixed(2)}</td><td>${totalExpense.toFixed(2)}</td><td style="color:${totalNet >= 0 ? '#27ae60' : '#e74c3c'}">${totalNet.toFixed(2)}</td></tr>`;
+    }
+
+    // ========== 门店相关（修复版）==========
+    function renderStoresTable() {
+        storesTableBody.innerHTML = stores.map(s => `<tr><td>${s.name}</td><td>${s.address || ''}</td><td>${s.phone || ''}</td><td>${s.note || ''}</td><td class="category-actions"><button class="category-action-btn warning" onclick="editStore(${s.id})">编辑</button><button class="category-action-btn danger" onclick="deleteStore(${s.id})">删除</button></td></tr>`).join('');
+    }
+
+    function renderStoreSelect() {
+        storeSelect.innerHTML = '<option value="">全部门店</option>' + stores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        storeSelect.value = selectedStoreId;
+    }
+
+    // 编辑门店：根据id找到门店并打开模态框
+    function editStore(id) {
+        const store = stores.find(s => s.id === id);
+        if (store) openStoreModal(store);
+    }
+
+    // 删除门店
+    function deleteStore(id) {
+        if (stores.length <= 1) { alert('至少保留一个门店'); return; }
+        if (transactions.some(t => t.storeId == id)) { alert('该门店存在交易记录，无法删除'); return; }
+        stores = stores.filter(s => s.id !== id);
+        if (selectedStoreId == id) selectedStoreId = '';
+        saveDataToStorage(); 
+        renderStoresTable(); 
+        renderStoreSelect();
+        // 如果当前是门店对比tab，刷新对比表
+        if (document.querySelector('.tab.active').dataset.tab === 'storeCompare') {
+            renderStoreCompare();
+        }
+        calculateAll();
+    }
+
+    // 打开门店模态框（新增/编辑）
+    function openStoreModal(store) {
+        currentStoreId = store ? store.id : null;
+        storeModalTitle.textContent = store ? '编辑门店' : '新增门店';
+        if (store) {
+            document.getElementById('storeId').value = store.id;
+            document.getElementById('storeName').value = store.name;
+            document.getElementById('storeAddress').value = store.address || '';
+            document.getElementById('storePhone').value = store.phone || '';
+            document.getElementById('storeNote').value = store.note || '';
+        } else {
+            storeForm.reset(); // 清空表单，隐藏域也会被清空
+        }
+        storeModal.style.display = 'flex';
+    }
+
+    // 门店表单提交：保存新增/编辑
+    function handleStoreFormSubmit(e) {
+        e.preventDefault();
+        const storeIdInput = document.getElementById('storeId');
+        const storeName = document.getElementById('storeName').value.trim();
+        if (!storeName) {
+            alert('门店名称不能为空');
+            return;
+        }
+        const storeAddress = document.getElementById('storeAddress').value;
+        const storePhone = document.getElementById('storePhone').value;
+        const storeNote = document.getElementById('storeNote').value;
+
+        if (storeIdInput.value) {
+            // 编辑
+            const id = parseInt(storeIdInput.value, 10);
+            const index = stores.findIndex(s => s.id === id);
+            if (index !== -1) {
+                stores[index] = { ...stores[index], name: storeName, address: storeAddress, phone: storePhone, note: storeNote };
+            }
+        } else {
+            // 新增：生成新ID（最大ID+1）
+            const newId = stores.length > 0 ? Math.max(...stores.map(s => s.id)) + 1 : 2;
+            stores.push({ id: newId, name: storeName, address: storeAddress, phone: storePhone, note: storeNote });
+        }
+
+        saveDataToStorage();
+        renderStoresTable();
+        renderStoreSelect();
+        closeModal('store');
+
+        // 如果当前是门店对比tab，刷新对比表
+        if (document.querySelector('.tab.active').dataset.tab === 'storeCompare') {
+            renderStoreCompare();
+        }
+        calculateAll(); // 门店变动不影响收支，但为了刷新可能依赖门店的下拉框，调用无害
+    }
+
+    function renderStoreCompare() {
+        const periodType = periodTypeSelect.value;
+        const selectedYear = yearSelect.value;
+        const selectedMonth = monthSelect.value;
+        const selectedDay = daySelect.value;
+
+        let timeFiltered = transactions;
+        if (periodType === 'custom' && isCustomPeriodActive) {
+            timeFiltered = timeFiltered.filter(t => t.date >= customPeriodStart && t.date <= customPeriodEnd);
+        } else if (periodType === 'annual') {
+            timeFiltered = selectedYear ? timeFiltered.filter(t => t.date.startsWith(selectedYear)) : timeFiltered;
+        } else if (periodType === 'monthly') {
+            if (selectedYear && selectedMonth) {
+                const yearMonth = `${selectedYear}-${selectedMonth}`;
+                timeFiltered = timeFiltered.filter(t => t.date.startsWith(yearMonth));
+                if (selectedDay) {
+                    timeFiltered = timeFiltered.filter(t => t.date === `${yearMonth}-${selectedDay}`);
+                }
+            }
+        }
+
+        const storeMap = new Map();
+        stores.forEach(s => storeMap.set(s.id, { name: s.name, income: 0, expense: 0, count: 0 }));
+
+        timeFiltered.forEach(t => {
+            const storeId = t.storeId;
+            if (storeMap.has(storeId)) {
+                const data = storeMap.get(storeId);
+                data.income += t.income;
+                data.expense += t.expense;
+                data.count += 1;
+            }
+        });
+
+        let totalIncome = 0, totalExpense = 0;
+        const storeData = [];
+        storeMap.forEach((data, id) => {
+            const profit = data.income - data.expense;
+            const margin = data.income > 0 ? (profit / data.income * 100) : 0;
+            storeData.push({
+                id,
+                name: data.name,
+                income: data.income,
+                expense: data.expense,
+                profit,
+                margin,
+                count: data.count
+            });
+            totalIncome += data.income;
+            totalExpense += data.expense;
+        });
+
+        document.getElementById('totalStores').textContent = stores.length;
+        document.getElementById('compareTotalIncome').textContent = totalIncome.toFixed(2);
+        document.getElementById('compareTotalExpense').textContent = totalExpense.toFixed(2);
+        document.getElementById('compareTotalProfit').textContent = (totalIncome - totalExpense).toFixed(2);
+
+        storeCompareBody.innerHTML = '';
+        storeData.sort((a, b) => b.income - a.income);
+        storeData.forEach(data => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${data.name}</td>
+                <td>${data.income.toFixed(2)}</td>
+                <td>${data.expense.toFixed(2)}</td>
+                <td style="color:${data.profit >= 0 ? '#27ae60' : '#e74c3c'}">${data.profit.toFixed(2)}</td>
+                <td>${data.margin.toFixed(1)}%</td>
+                <td>${data.count}</td>
+                <td>${totalIncome > 0 ? (data.income / totalIncome * 100).toFixed(1) : 0}%</td>
+            `;
+            storeCompareBody.appendChild(row);
+        });
+
+        updateStoreCompareChart(storeData);
+    }
+
+    function updateStoreCompareChart(storeData) {
+        const ctx = document.getElementById('storeCompareChart').getContext('2d');
+        if (storeCompareChart) storeCompareChart.destroy();
+        const labels = storeData.map(d => d.name);
+        const incomeData = storeData.map(d => d.income);
+        const expenseData = storeData.map(d => d.expense);
+        const profitData = storeData.map(d => d.profit);
+
+        storeCompareChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '收入', data: incomeData, backgroundColor: '#27ae60' },
+                    { label: '支出', data: expenseData, backgroundColor: '#e74c3c' },
+                    { label: '利润', data: profitData, type: 'line', borderColor: '#3498db', borderWidth: 2, fill: false }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { title: { display: true, text: '各门店收支对比', font: { size: 16 } } },
+                scales: { y: { beginAtZero: true, title: { display: true, text: '金额（元）' } } }
+            }
+        });
+    }
+
+    // ========== 科目分类管理 ==========
+    function renderCategoriesTable() {
+        categoriesTableBody.innerHTML = accountCategories.map(c => `<tr><td>${c.type}</td><td>${c.primary}</td><td>${c.secondary}</td><td>${c.detail || ''}</td><td>${c.description}</td><td class="category-actions"><button class="category-action-btn warning" onclick="editCategory(${c.id})">编辑</button><button class="category-action-btn danger" onclick="deleteCategory(${c.id})">删除</button></td></tr>`).join('');
+    }
+
+    function editCategory(id) {
+        const cat = accountCategories.find(c => c.id === id);
+        if (cat) openCategoryModal(cat);
+    }
+
+    function deleteCategory(id) {
+        if (!confirm('确定删除该科目？若被交易引用将重置为默认科目')) return;
+        const cat = accountCategories.find(c => c.id === id);
+        if (!cat) return;
+        const used = transactions.filter(t => t.type === cat.type && t.primary === cat.primary && t.secondary === cat.secondary);
+        if (used.length > 0) {
+            const def = getDefaultCategory();
+            used.forEach(t => {
+                t.type = def.type;
+                t.primary = def.primary;
+                t.secondary = def.secondary;
+                t.detail = '';
+            });
+        }
+        accountCategories = accountCategories.filter(c => c.id !== id);
+        saveDataToStorage();
+        renderCategoriesTable();
+        renderDailyTable();
+        populateProfitFilterDropdowns();
+        calculateAll();
+        alert('科目已删除');
+    }
+
+    // ========== 模态框操作 ==========
+    function openCategoryModal(cat) {
+        currentCategoryId = cat ? cat.id : null;
+        categoryModalTitle.textContent = cat ? '修改会计科目' : '新增会计科目';
+        if (cat) {
+            document.getElementById('categoryType').value = cat.type;
+            document.getElementById('primaryCategory').value = cat.primary;
+            document.getElementById('secondaryCategory').value = cat.secondary;
+            document.getElementById('detailCategory').value = cat.detail || '';
+            document.getElementById('categoryDescription').value = cat.description;
+        } else {
+            categoryForm.reset();
+        }
+        categoryModal.style.display = 'flex';
+    }
+
+    function closeModal(type) {
+        if (type === 'category') { categoryModal.style.display = 'none'; categoryForm.reset(); }
+        else if (type === 'attachment') { attachmentModal.style.display = 'none'; fileInput.value = ''; attachmentsList.innerHTML = ''; }
+        else if (type === 'store') { storeModal.style.display = 'none'; storeForm.reset(); }
+    }
+
+    function handleCategoryFormSubmit(e) {
+        e.preventDefault();
+        const type = document.getElementById('categoryType').value;
+        const primary = document.getElementById('primaryCategory').value;
+        const secondary = document.getElementById('secondaryCategory').value;
+        const detail = document.getElementById('detailCategory').value;
+        const description = document.getElementById('categoryDescription').value;
+        if (!type || !primary || !secondary) {
+            alert('请填写所有必填字段（一级分类、一级科目、二级科目）！');
+            return;
+        }
+
+        let oldType, oldPrimary, oldSecondary;
+        if (currentCategoryId) {
+            const index = accountCategories.findIndex(c => c.id === currentCategoryId);
+            if (index !== -1) {
+                oldType = accountCategories[index].type;
+                oldPrimary = accountCategories[index].primary;
+                oldSecondary = accountCategories[index].secondary;
+                accountCategories[index] = { id: currentCategoryId, type, primary, secondary, detail, description };
+                if (oldType !== type || oldPrimary !== primary || oldSecondary !== secondary) {
+                    transactions.forEach(t => {
+                        if (t.type === oldType && t.primary === oldPrimary && t.secondary === oldSecondary) {
+                            t.type = type;
+                            t.primary = primary;
+                            t.secondary = secondary;
+                        }
+                    });
+                }
+            }
+        } else {
+            const newId = accountCategories.length > 0 ? Math.max(...accountCategories.map(c => c.id)) + 1 : 1;
+            accountCategories.push({ id: newId, type, primary, secondary, detail, description });
+        }
+
+        saveDataToStorage();
+        renderCategoriesTable();
+        renderDailyTable();
+        populateProfitFilterDropdowns();
+        calculateAll();
+        closeModal('category');
+        alert(currentCategoryId ? '科目修改成功！' : '科目新增成功！');
+    }
+
+    // ========== 固定资产 ==========
+    function renderAssetsTable() {
+        assetsTableBody.innerHTML = fixedAssets.map((a, i) => `<tr>
+            <td><input type="text" value="${a.name}" data-index="${i}" data-field="name"></td>
+            <td><input type="date" value="${a.purchaseDate}" data-index="${i}" data-field="purchaseDate"></td>
+            <td><input type="number" step="0.01" value="${a.originalValue}" data-index="${i}" data-field="originalValue"></td>
+            <td><input type="number" value="${a.usefulLife}" data-index="${i}" data-field="usefulLife"></td>
+            <td>${a.monthlyDepreciation.toFixed(2)}</td>
+            <td>${a.accumulatedDepreciation.toFixed(2)}</td>
+            <td>${a.netValue.toFixed(2)}</td>
+            <td><input type="text" value="${a.location}" data-index="${i}" data-field="location"></td>
+            <td><button class="delete-btn" data-index="${i}" style="background-color:#e74c3c; padding:6px 12px;">删除</button></td>
+        </tr>`).join('');
+        assetsTableBody.querySelectorAll('input').forEach(el => el.addEventListener('change', handleAssetChange));
+        assetsTableBody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', function () {
+            let idx = parseInt(this.dataset.index);
+            if (confirm('确定删除？')) { fixedAssets.splice(idx, 1); saveDataToStorage(); renderAssetsTable(); calculateAll(); }
+        }));
+    }
+
+    function handleAssetChange(e) {
+        let el = e.target, idx = parseInt(el.dataset.index), field = el.dataset.field, val = el.value;
+        if (field === 'originalValue' || field === 'usefulLife') val = parseFloat(val) || 0;
+        fixedAssets[idx][field] = val;
+        if (field === 'originalValue' || field === 'usefulLife') {
+            let a = fixedAssets[idx];
+            if (a.originalValue > 0 && a.usefulLife > 0) {
+                a.monthlyDepreciation = a.originalValue / (a.usefulLife * 12);
+                let pd = new Date(a.purchaseDate), cd = new Date();
+                let months = Math.max(0, (cd.getFullYear() - pd.getFullYear()) * 12 + cd.getMonth() - pd.getMonth());
+                a.accumulatedDepreciation = a.monthlyDepreciation * months;
+                a.netValue = Math.max(0, a.originalValue - a.accumulatedDepreciation);
+            }
+        }
+        saveDataToStorage(); renderAssetsTable(); calculateAll();
+    }
+
+    function addAsset() {
+        fixedAssets.push({
+            name: "新资产",
+            purchaseDate: new Date().toISOString().split('T')[0],
+            originalValue: 0,
+            usefulLife: 3,
+            monthlyDepreciation: 0,
+            accumulatedDepreciation: 0,
+            netValue: 0,
+            location: ""
+        });
+        saveDataToStorage();
+        renderAssetsTable();
+    }
+
+    // ========== 事件绑定 ==========
+    function setupEventListeners() {
+        document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.tab).classList.add('active');
+            if (['annual', 'profit', 'summary', 'fullPeriod', 'accounts'].includes(this.dataset.tab)) setTimeout(calculateAll, 100);
+            if (this.dataset.tab === 'storeCompare') renderStoreCompare();
+        }));
+
+        document.getElementById('importExcel').addEventListener('click', () => { alert('导入功能演示'); });
+        document.getElementById('exportExcel').addEventListener('click', () => { alert('导出功能演示'); });
+        document.getElementById('addTransaction').addEventListener('click', addTransaction);
+        document.getElementById('calculateAll').addEventListener('click', calculateAll);
+        document.getElementById('addAsset').addEventListener('click', addAsset);
+
+        periodTypeSelect.addEventListener('change', function () {
+            dateSelectors.style.display = (this.value === 'full' || this.value === 'custom') ? 'none' : 'flex';
+            customPeriodSelector.style.display = this.value === 'custom' ? 'flex' : 'none';
+            if (this.value === 'custom') applyCustomPeriodSettings();
+            else { isCustomPeriodActive = false; calculateAll(); }
+        });
+
+        yearSelect.addEventListener('change', calculateAll);
+        monthSelect.addEventListener('change', calculateAll);
+        daySelect.addEventListener('change', calculateAll);
+
+        document.getElementById('addCategory').addEventListener('click', () => openCategoryModal());
+
+        closeCategoryModal.addEventListener('click', () => closeModal('category'));
+        cancelCategory.addEventListener('click', () => closeModal('category'));
+        categoryForm.addEventListener('submit', handleCategoryFormSubmit);
+        categoryModal.addEventListener('click', e => { if (e.target === categoryModal) closeModal('category'); });
+
+        uploadAttachmentBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileUpload);
+        closeAttachmentModal.addEventListener('click', () => closeModal('attachment'));
+        cancelAttachmentModal.addEventListener('click', () => closeModal('attachment'));
+        attachmentModal.addEventListener('click', e => { if (e.target === attachmentModal) closeModal('attachment'); });
+
+        applyCustomPeriod.addEventListener('click', applyCustomPeriodSettings);
+        resetCustomPeriod.addEventListener('click', resetCustomPeriodSettings);
+
+        saveInitialBalance.addEventListener('click', () => {
+            accountInitialBalances["现金"] = parseFloat(cashInitialBalance.value) || 0;
+            accountInitialBalances["建行账户"] = parseFloat(bankInitialBalance.value) || 0;
+            saveDataToStorage(); calculateAll(); alert('账户初始余额已保存！');
+        });
+
+        applyProfitFilter.addEventListener('click', () => renderProfitDetailTable(g_currentFilteredTransactions));
+        resetProfitFilter.addEventListener('click', () => {
+            profitFilterType.value = ''; profitFilterPrimary.value = ''; profitFilterSecondary.value = ''; profitFilterDetail.value = '';
+            renderProfitDetailTable(g_currentFilteredTransactions);
+        });
+
+        addStoreBtn.addEventListener('click', () => openStoreModal());
+        closeStoreModal.addEventListener('click', () => closeModal('store'));
+        cancelStore.addEventListener('click', () => closeModal('store'));
+        storeForm.addEventListener('submit', handleStoreFormSubmit);
+        storeModal.addEventListener('click', e => { if (e.target === storeModal) closeModal('store'); });
+
+        storeSelect.addEventListener('change', function () { selectedStoreId = this.value; calculateAll(); renderDailyTable(); });
+    }
+
+    // ========== 初始化 ==========
+    function init() {
+        loadDataFromStorage();
+        migrateData();
+        validateTransactionsAgainstCategories();
+        populateYearSelect();
+        populateDaySelect();
+        renderCategoriesTable();
+        renderDailyTable();
+        renderAssetsTable();
+        renderStoresTable();
+        renderStoreSelect();
+        calculateAll();
+        setupEventListeners();
+        customStartDate.value = ''; customEndDate.value = '';
+        loadAccountInitialBalances();
+        loadCustomPeriodSettings();
+        populateProfitFilterDropdowns();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    window.editCategory = editCategory;
+    window.deleteCategory = deleteCategory;
+    window.openAttachmentModal = openAttachmentModal;
+    window.downloadAttachment = downloadAttachment;
+    window.deleteAttachment = deleteAttachment;
+    window.updateSecondaryOptions = updateSecondaryOptions;
+    window.editStore = editStore;
+    window.deleteStore = deleteStore;
+</script>
+</body>
+</html>
