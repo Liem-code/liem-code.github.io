@@ -486,6 +486,32 @@
         const idx = parseInt(el.dataset.index);
         const field = el.dataset.field;
         let val = el.value;
+
+        // 处理日期字段（年、月、日）
+        if (field === 'dateYear' || field === 'dateMonth' || field === 'dateDay') {
+            // 确保只输入数字
+            val = val.replace(/\D/g, '');
+            el.value = val;
+
+            // 更新日期
+            const row = el.closest('tr');
+            const yearInput = row.querySelector('.date-year');
+            const monthInput = row.querySelector('.date-month');
+            const dayInput = row.querySelector('.date-day');
+
+            const year = yearInput.value.padStart(4, '0');
+            const month = monthInput.value.padStart(2, '0');
+            const day = dayInput.value.padStart(2, '0');
+
+            if (year && month && day) {
+                transactions[idx]['date'] = `${year}-${month}-${day}`;
+            }
+
+            saveDataToStorage();
+            calculateAll();
+            return;
+        }
+
         if (field === 'income' || field === 'expense') val = parseFloat(val) || 0;
         else if (field === 'storeId') val = parseInt(val);
         transactions[idx][field] = val;
@@ -508,7 +534,9 @@
         const typeOpts = getUniqueTypes().map(t => `<option value="${t}">${t}</option>`).join('');
         const storeOpts = stores.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         dailyTableBody.innerHTML = '';
-        filtered.forEach((t, idx) => {
+        filtered.forEach((t) => {
+            // 获取原始 transactions 数组中的真实索引
+            const originalIdx = transactions.findIndex(tran => tran === t);
             // 如果科目表不为空，确保交易科目有效
             if (accountCategories.length > 0) {
                 const validPrimary = new Set(accountCategories.map(c => c.primary));
@@ -525,21 +553,32 @@
                 }
             }
             const attachCount = t.attachments ? t.attachments.length : 0;
+            // 解析日期为年、月、日
+            const dateParts = t.date ? t.date.split('-') : ['', '', ''];
+            const yearVal = dateParts[0] || '';
+            const monthVal = dateParts[1] || '';
+            const dayVal = dateParts[2] || '';
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><input type="date" value="${t.date}" data-index="${idx}" data-field="date"></td>
-                <td><input type="text" value="${t.voucher}" data-index="${idx}" data-field="voucher"></td>
-                <td><select data-index="${idx}" data-field="storeId">${storeOpts}</select></td>
-                <td><select data-index="${idx}" data-field="type">${typeOpts}</select></td>
-                <td><select data-index="${idx}" data-field="primary" onchange="updateSecondaryOptions(this)"><option value="">请选择一级科目</option>${getPrimaryOptions(t.primary)}</select></td>
-                <td><select data-index="${idx}" data-field="secondary"><option value="">请选择二级科目</option>${getSecondaryOptions(t.primary, t.secondary)}</select></td>
-                <td><input type="text" value="${t.detail || ''}" data-index="${idx}" data-field="detail" placeholder="明细分类"></td>
-                <td><input type="number" step="0.01" value="${t.income}" data-index="${idx}" data-field="income"></td>
-                <td><input type="number" step="0.01" value="${t.expense}" data-index="${idx}" data-field="expense"></td>
-                <td><select data-index="${idx}" data-field="payment"><option value="现金" ${t.payment === '现金' ? 'selected' : ''}>现金</option><option value="建行账户" ${t.payment === '建行账户' ? 'selected' : ''}>建行账户</option></select></td>
-                <td><input type="text" value="${t.note}" data-index="${idx}" data-field="note"></td>
-                <td class="attachment-container"><button class="attachment-btn" onclick="openAttachmentModal(${idx})">附件${attachCount ? `<span class="attachments-count">${attachCount}</span>` : ''}</button></td>
-                <td><button class="delete-btn" data-index="${idx}" style="background-color:#e74c3c; padding:6px 12px; font-size:0.85rem;">删除</button></td>
+                <td>
+                    <div style="display:flex;gap:2px;">
+                        <input type="text" value="${yearVal}" data-index="${originalIdx}" data-field="dateYear" placeholder="年" maxlength="4" style="width:60px;text-align:center;" class="date-year">
+                        <input type="text" value="${monthVal}" data-index="${originalIdx}" data-field="dateMonth" placeholder="月" maxlength="2" style="width:45px;text-align:center;" class="date-month">
+                        <input type="text" value="${dayVal}" data-index="${originalIdx}" data-field="dateDay" placeholder="日" maxlength="2" style="width:45px;text-align:center;" class="date-day">
+                    </div>
+                </td>
+                <td><input type="text" value="${t.voucher}" data-index="${originalIdx}" data-field="voucher"></td>
+                <td><select data-index="${originalIdx}" data-field="storeId">${storeOpts}</select></td>
+                <td><select data-index="${originalIdx}" data-field="type">${typeOpts}</select></td>
+                <td><select data-index="${originalIdx}" data-field="primary" onchange="updateSecondaryOptions(this)"><option value="">请选择一级科目</option>${getPrimaryOptions(t.primary)}</select></td>
+                <td><select data-index="${originalIdx}" data-field="secondary"><option value="">请选择二级科目</option>${getSecondaryOptions(t.primary, t.secondary)}</select></td>
+                <td><input type="text" value="${t.detail || ''}" data-index="${originalIdx}" data-field="detail" placeholder="明细分类"></td>
+                <td><input type="number" step="0.01" value="${t.income}" data-index="${originalIdx}" data-field="income"></td>
+                <td><input type="number" step="0.01" value="${t.expense}" data-index="${originalIdx}" data-field="expense"></td>
+                <td><select data-index="${originalIdx}" data-field="payment"><option value="现金" ${t.payment === '现金' ? 'selected' : ''}>现金</option><option value="建行账户" ${t.payment === '建行账户' ? 'selected' : ''}>建行账户</option></select></td>
+                <td><input type="text" value="${t.note}" data-index="${originalIdx}" data-field="note"></td>
+                <td class="attachment-container"><button class="attachment-btn" onclick="openAttachmentModal(${originalIdx})">附件${attachCount ? `<span class="attachments-count">${attachCount}</span>` : ''}</button></td>
+                <td><button class="delete-btn" data-index="${originalIdx}" style="background-color:#e74c3c; padding:6px 12px; font-size:0.85rem;">删除</button></td>
             `;
             dailyTableBody.appendChild(row);
             row.querySelector('select[data-field="storeId"]').value = t.storeId;
@@ -548,7 +587,40 @@
             row.querySelector('select[data-field="secondary"]').value = t.secondary;
         });
         dailyTableBody.querySelectorAll('input, select').forEach(el => el.addEventListener('change', handleTransactionChange));
+        // 为日期输入框添加 keyup 事件监听，实现自动跳转
+        dailyTableBody.querySelectorAll('.date-year, .date-month, .date-day').forEach(el => {
+            el.addEventListener('keyup', handleDateKeyup);
+        });
         dailyTableBody.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', function () { deleteTransaction(parseInt(this.dataset.index)); }));
+    }
+
+    // 处理日期输入框的 keyup 事件
+    function handleDateKeyup(e) {
+        // 如果是 TAB 键，不执行自动跳转，让浏览器默认行为处理
+        if (e.key === 'Tab') {
+            return;
+        }
+
+        const el = e.target;
+        const field = el.dataset.field;
+        const val = el.value;
+
+        // 自动跳转逻辑：输入满位数后自动跳转到下一个字段（仅当不是 TAB 键时）
+        if (field === 'dateYear' && val.length >= 4) {
+            const row = el.closest('tr');
+            const monthInput = row.querySelector('.date-month');
+            if (monthInput) {
+                monthInput.focus();
+                monthInput.select();
+            }
+        } else if (field === 'dateMonth' && val.length >= 2) {
+            const row = el.closest('tr');
+            const dayInput = row.querySelector('.date-day');
+            if (dayInput) {
+                dayInput.focus();
+                dayInput.select();
+            }
+        }
     }
 
     function deleteTransaction(index) {
